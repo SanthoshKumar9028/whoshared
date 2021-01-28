@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 
 //to configure the environment variables
-// require("dotenv").config();
+//require("dotenv").config();
 
 const server = express();
 
