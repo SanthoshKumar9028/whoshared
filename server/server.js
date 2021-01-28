@@ -26,18 +26,18 @@ server.get("/*", (request, response) => {
 });
 
 //db connection
-mongoose.connect(
-  process.env.DB_URL,
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false,
-    useCreateIndex: true,
-  },
-  (err) => {
-    if (err) console.log(err);
-  }
-);
+// mongoose.connect(
+//   process.env.DB_URL,
+//   {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true,
+//     useFindAndModify: false,
+//     useCreateIndex: true,
+//   },
+//   (err) => {
+//     if (err) console.log(err);
+//   }
+// );
 
 const wsServer = server.listen(PORT, () =>
   console.log(`waiting on port ${PORT}`)
