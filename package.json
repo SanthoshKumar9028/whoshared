@@ -4,6 +4,9 @@
   "private": true,
   "proxy": "http://localhost:8080",
   "dependencies": {
+    "@babel/preset-env": "^7.12.11",
+    "@babel/preset-react": "^7.12.10",
+    "@babel/register": "^7.12.10",
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.3",
     "@testing-library/user-event": "^12.6.2",
@@ -48,9 +51,6 @@
     ]
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.12.11",
-    "@babel/preset-react": "^7.12.10",
-    "@babel/register": "^7.12.10",
     "concurrently": "^5.3.0",
     "ignore-styles": "^5.0.1",
     "node-sass": "^4.12.0",
