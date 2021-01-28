@@ -13,7 +13,6 @@
 
 # misc
 debug.log
-.eslintcache
 .DS_Store
 .env
 .env.local
