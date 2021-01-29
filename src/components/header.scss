@@ -1,0 +1,19 @@
+@import "../styles/partials";
+
+.header {
+  padding: 0.5em 0.3em;
+  box-shadow: 0px 1px 8px rgba(0, 0, 0, 0.541);
+  background-color: $primary-color;
+}
+
+.header__content {
+  @extend %container;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.header__logo {
+  width: 50px;
+  display: block;
+  border-radius: 50%;
+}

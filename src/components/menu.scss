@@ -1,0 +1,71 @@
+.user-menu {
+  width: 35px;
+  position: relative;
+  z-index: 1000;
+}
+.user-menu div {
+  text-align: center;
+  display: inline-block;
+  margin: 0 auto;
+  position: relative;
+}
+.user-menu summary {
+  text-align: right;
+  cursor: pointer;
+}
+.user-menu .profile-img {
+  width: 35px;
+  border-radius: 50%;
+  vertical-align: middle;
+}
+.user-menu .profile-img::selection {
+  color: transparent;
+}
+
+.user-menu .nav {
+  border-radius: 10px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  background-color: white;
+  position: absolute;
+  top: 105%;
+  right: 0;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.user-menu ul,
+.guest-menu ul {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+.user-menu ul {
+  position: relative;
+}
+
+.user-menu .nav__link,
+.guest-menu .nav__link {
+  display: block;
+  color: black;
+  padding: 0.75em 3.3em;
+  text-decoration: none;
+  text-transform: capitalize;
+  border-bottom: 2px solid transparent;
+  outline: none;
+}
+.guest-menu .nav__link {
+  background-color: gold;
+  font-weight: 600;
+  padding: 0.75em 2.3em;
+  border-radius: 10px;
+}
+.guest-menu .nav__link:hover,
+.guest-menu .nav__link:focus {
+  background-color: rgba(255, 217, 0, 0.384);
+}
+.user-menu .nav__link:hover,
+.user-menu .nav__link:focus {
+  background-color: gainsboro;
+  border-bottom-color: gray;
+}
