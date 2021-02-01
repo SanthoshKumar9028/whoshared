@@ -9,6 +9,5 @@ export default function (req, res, next) {
       if (!err) req._user_ = decodedData;
       next();
     });
-  }
-  next();
+  } else next();
 }

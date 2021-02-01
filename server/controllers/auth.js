@@ -84,7 +84,8 @@ export async function post_login_user(req, res) {
 
 export function get_logout_user(req, res) {
   res.cookie("jwt", "", { maxAge: 1 });
-  res.end("");
+  res.json({});
+  res.end();
 }
 
 export default { get_is_user, post_add_user, post_login_user, get_logout_user };

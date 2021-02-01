@@ -5,6 +5,9 @@ import "./App.scss";
 import Home from "./pages/home";
 import Login from "./pages/login";
 import Profile from "./pages/profile";
+import GroupChat from "./pages/group-chat";
+import FriendsList from "./pages/friends-list";
+import LoadingIndicator from "./components/loading-indicator";
 import { userContext } from "./lib/contexts";
 
 function App() {
@@ -15,7 +18,19 @@ function App() {
     const validateUser = async () => {
       const emptyUser = { isLogedIn: false };
       try {
-        setUser(emptyUser);
+        const data = await fetch("/auth/is-user").then((res) => res.json());
+        // console.log(data);
+        if (data.user) {
+          data.user.isLogedIn = true;
+          data.user.logout = async function () {
+            try {
+              await fetch("/auth/logout-user");
+            } finally {
+              setUser(emptyUser);
+            }
+          };
+          setUser(data.user);
+        } else setUser(emptyUser);
       } catch (e) {
         setUser(emptyUser);
       } finally {
@@ -25,7 +40,7 @@ function App() {
     validateUser();
   }, []);
 
-  if (loading) return <h2>Loading...</h2>;
+  if (loading) return <LoadingIndicator />;
 
   return (
     <Router>
@@ -38,7 +53,10 @@ function App() {
             <Profile />
           </Route>
           <Route path="/group-chat">
-            <h1>Group Chat</h1>
+            <GroupChat />
+          </Route>
+          <Route path="/friends">
+            <FriendsList />
           </Route>
           <Route path="/login">
             <Login setUser={setUser} />

@@ -4,13 +4,18 @@ import { Link } from "react-router-dom";
 import "./menu.scss";
 import { userContext } from "../lib/contexts";
 
-function GuestMenu() {
+export function GuestMenu() {
   return (
-    <section className="guest-menu" style={{ visibility: "hidden" }}>
+    <section className="guest-menu">
       <nav className="nav">
         <ul className="nav__list">
           <li className="nav__item">
-            <a href="/login" className="nav__link">
+            <a href="/" className="nav__link">
+              home
+            </a>
+          </li>
+          <li className="nav__item">
+            <a href="/login" className="nav__link nav__link--login">
               log in
             </a>
           </li>
@@ -20,9 +25,9 @@ function GuestMenu() {
   );
 }
 
-function UserMenu(props) {
+export function UserMenu(props) {
   const [open, setOpen] = useState(false);
-  const { logout, imgUrl } = useContext(userContext);
+  const { logout, imgUrl, username } = useContext(userContext);
   const { style, ...rest } = props;
 
   const close = useCallback(() => {
@@ -36,6 +41,7 @@ function UserMenu(props) {
 
   return (
     <section className="user-menu" style={style} {...rest}>
+      <div className="user-menu__name">{username}</div>
       <div
         onClick={close}
         onKeyUp={keyhandler}
@@ -71,11 +77,6 @@ function UserMenu(props) {
               </Link>
             </li>
             <li className="nav__item">
-              <Link to="/register" className="nav__link">
-                register
-              </Link>
-            </li>
-            <li className="nav__item">
               <a
                 href="/log-out"
                 className="nav__link"
@@ -94,14 +95,4 @@ function UserMenu(props) {
   );
 }
 
-const GuestMenuMemo = React.memo(GuestMenu);
-
-export default function Menu() {
-  const { isLogedIn } = useContext(userContext);
-
-  //if user loged in
-  if (isLogedIn) {
-    return <UserMenu />;
-  }
-  return <GuestMenuMemo />;
-}
+export const GuestMenuMemo = React.memo(GuestMenu);

@@ -1,10 +1,12 @@
-import React from "react";
-import Menu from "./menu";
+import React, { useContext } from "react";
 
 import "./header.scss";
+import { GuestMenu, UserMenu } from "./menu";
+import { userContext } from "../lib/contexts";
 
 export default function Header(props) {
-  let { className, ...rest } = props;
+  const { isLogedIn } = useContext(userContext);
+  let { className, guestmenu, ...rest } = props;
   if (className) className += " header";
   else className = "header";
 
@@ -18,7 +20,7 @@ export default function Header(props) {
             alt="who shared application logo"
           />
         </a>
-        <Menu />
+        {guestmenu || !isLogedIn ? <GuestMenu /> : <UserMenu />}
       </div>
     </header>
   );
