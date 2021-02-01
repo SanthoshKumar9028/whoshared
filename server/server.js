@@ -29,6 +29,7 @@ server.get("/*", (request, response) => {
   response.sendFile(path.resolve("./build/index.html"));
 });
 
+console.log(process.env.DB_URL);
 // db connection
 mongoose.connect(
   process.env.DB_URL,
