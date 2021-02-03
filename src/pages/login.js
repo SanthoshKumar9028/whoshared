@@ -52,7 +52,7 @@ export default function Login({ setUser }) {
 
   return (
     <Layout>
-      <div className="login">
+      <main className="login">
         <form className="login__form" onSubmit={handleSubmit}>
           <div>
             <h2 className="login__title">login form</h2>
@@ -89,7 +89,7 @@ export default function Login({ setUser }) {
             />
           </div>
         </form>
-      </div>
+      </main>
     </Layout>
   );
 }

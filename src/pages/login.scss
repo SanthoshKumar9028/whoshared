@@ -1,5 +1,9 @@
 @import "../styles/partials";
 
+.login {
+  min-height: 80vh;
+  padding-top: 1rem;
+}
 .login__form {
   width: 80%;
   max-width: 420px;

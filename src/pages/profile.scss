@@ -1,0 +1,161 @@
+@import "../styles/partials";
+
+.profile {
+  overflow: hidden;
+  &__section {
+    @extend %container;
+  }
+  &__intro {
+    min-height: 40vh;
+    background: linear-gradient(30deg, black, $primary-color);
+    position: relative;
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: -20px;
+      left: 0;
+      width: 100%;
+      height: 50%;
+      background: inherit;
+      transform: rotate(-2deg) scaleX(1.1);
+    }
+  }
+  //profile image
+  &__pic-container {
+    display: none;
+    position: absolute;
+    padding: 1rem;
+    top: calc(100% - calc(75px + 2rem));
+    width: 150px;
+    height: 150px;
+    left: 50%;
+    background-color: $secondary-color;
+    border-radius: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+  }
+  &__pic-img {
+    filter: contrast(0);
+  }
+  &__username {
+    margin-top: 100px;
+    text-align: center;
+  }
+  &__info,
+  &__pwd-info {
+    max-width: 800px;
+    padding: 1em;
+    margin-bottom: 3rem;
+  }
+  &__form {
+    max-width: 400px;
+    font-size: 1.2rem;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+    padding: 1em;
+    border-radius: 10px;
+    & > * {
+      display: block;
+    }
+    &-title {
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin: 0;
+      font-size: 1.7rem;
+    }
+    &-error {
+      color: red;
+      font-size: 1rem;
+    }
+    & > label {
+      text-transform: capitalize;
+      margin: 0.5em 0 0.3em;
+    }
+    & > input {
+      padding: 0.4rem;
+      width: 80%;
+      border: none;
+      background-color: inherit;
+      border-bottom: 2px solid black;
+      outline: none;
+      transition: border-bottom 200ms;
+      &:focus {
+        border-bottom-color: gray;
+      }
+    }
+    & > button {
+      margin-top: 1em;
+      padding: 0.7em 2.5em;
+      text-transform: uppercase;
+      border: none;
+      background-color: $secondary-color;
+      color: white;
+      cursor: pointer;
+      &:focus,
+      &:hover {
+        outline: 2px solid white;
+        outline-offset: -4px;
+      }
+      &:disabled {
+        background-color: lighten($secondary-color, 30%);
+        cursor: not-allowed;
+      }
+    }
+  }
+  &__account-deletion-content {
+    max-width: 800px;
+    font-size: 1.2rem;
+    margin-bottom: 3rem;
+    & > * {
+      display: block;
+    }
+    & > button {
+      margin-bottom: 1em;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: inherit;
+      padding: 0.5em 1em;
+      background-color: crimson;
+      border: none;
+      color: white;
+      cursor: pointer;
+      &:disabled {
+        background-color: lighten($color: crimson, $amount: 20%);
+        cursor: not-allowed;
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 600px) {
+  .profile {
+    &__pic-container {
+      left: 30%;
+    }
+    &__username {
+      margin-top: 70px;
+      text-align: right;
+    }
+    &__form {
+      & > button {
+        padding: 0.7rem 3rem;
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 1100px) {
+  .profile {
+    &__pic-container {
+      left: 20%;
+    }
+    &__form {
+      font-size: 1.5rem;
+      &-title {
+        font-size: 1.7rem;
+      }
+      & > input {
+        font-size: 1.1rem;
+      }
+    }
+  }
+}
