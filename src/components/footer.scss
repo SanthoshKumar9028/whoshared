@@ -1,0 +1,13 @@
+@import "../styles/partials";
+
+.footer {
+  background-color: $secondary-color;
+  padding: 1em 0;
+  &__content {
+    @extend %container;
+  }
+  &__text {
+    color: white;
+    text-align: right;
+  }
+}

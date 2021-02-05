@@ -1,0 +1,50 @@
+@import "../styles/partials";
+
+.home {
+  min-height: 80vh;
+  display: flex;
+  &__content {
+    @extend %container;
+    margin: auto;
+  }
+  &__intro {
+    text-align: center;
+  }
+  &__intro-title {
+    margin: 0;
+    font-weight: bolder;
+  }
+  &__intro-text {
+    font-size: 1.2rem;
+  }
+  &__intro-login-btn {
+    display: inline-block;
+    background-color: $primary-color;
+    margin-top: 1em;
+    padding: 0.6em 2.6em;
+    color: white;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    border-radius: 5px;
+    &::after {
+      content: "";
+      position: absolute;
+      width: 0%;
+      height: 100%;
+      background-color: black;
+      top: 0;
+      left: 0;
+      z-index: -1;
+      border-top-right-radius: 1em;
+      border-bottom-right-radius: 1em;
+      transition: width 300ms;
+    }
+    &:hover::after {
+      width: 110%;
+    }
+  }
+}
