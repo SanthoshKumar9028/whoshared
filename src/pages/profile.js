@@ -7,26 +7,70 @@ import { useUserAuth } from "../lib/hooks";
 
 function InfoForm(props) {
   const [username, setUsername] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [originalname, setOriginalname] = useState("");
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
 
   const { user } = useUserAuth();
 
   useEffect(() => {
     setUsername(user.username);
-    setLoading(false);
+    setOriginalname(user.originalname);
   }, []);
 
-  if (loading) return <h2>loading...</h2>;
+  async function changeUserName() {
+    try {
+      setLoading(true);
+      const res = await fetch("http://localhost:3000/user/update-username", {
+        method: "POST",
+        body: JSON.stringify({ username }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await res.json();
+      // console.log(data);
+      if (data.errors) {
+        setErrors(data.errors);
+      }
+      if (data.user) {
+        data.user.isLogedIn = true;
+        data.user.changeUser = user.changeUser;
+        data.user.logout = async function () {
+          try {
+            await fetch("/auth/logout-user");
+          } finally {
+            user.changeUser({ isLogedIn: false });
+          }
+        };
+        //reset the errors
+        setErrors({});
+        //update the user
+        user.changeUser(data.user);
+      }
+    } catch (e) {
+      console.log(e);
+      alert("something went wrong, try again later");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <div {...props}>
       <h2 className="profile__form-title">info</h2>
       <label>original name</label>
-      <input value="temprator" disabled />
+      <input value={originalname} disabled />
       <label>fake name</label>
       <input value={username} onChange={(e) => setUsername(e.target.value)} />
-      <span className="profile__form-error"></span>
-      <button disabled={username === user.username}>save</button>
+      <span className="profile__form-error">{errors.username}</span>
+      <button
+        onClick={changeUserName}
+        disabled={username === user.username || loading}
+        className={loading ? "ring-loader ring-loader--x-small" : ""}
+      >
+        save
+      </button>
     </div>
   );
 }
@@ -34,9 +78,37 @@ function InfoForm(props) {
 function PasswordForm(props) {
   const [newPwd, setNewPwd] = useState("");
   const [confirmPwd, setConfirmPwd] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({});
 
-  const { user } = useUserAuth();
-
+  async function changePassword() {
+    try {
+      setLoading(true);
+      const res = await fetch("/user/update-password", {
+        method: "POST",
+        body: JSON.stringify({ password: newPwd }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await res.json();
+      // console.log(data);
+      if (data.errors) {
+        setErrors(data.errors);
+      }
+      if (data.user) {
+        setErrors({});
+        setNewPwd("");
+        setConfirmPwd("");
+        setTimeout(() => alert("password changed sucessfully"), 10);
+      }
+    } catch (e) {
+      console.log(e);
+      alert("something went wrong, try again later");
+    } finally {
+      setLoading(false);
+    }
+  }
   return (
     <div {...props}>
       <h2 className="profile__form-title">change password</h2>
@@ -47,17 +119,31 @@ function PasswordForm(props) {
         value={confirmPwd}
         onChange={(e) => setConfirmPwd(e.target.value)}
       />
-      <span className="profile__form-error"></span>
-      <button disabled={!newPwd || newPwd !== confirmPwd}>save</button>
+      <span className="profile__form-error">{errors.password}</span>
+      <button
+        onClick={changePassword}
+        disabled={!newPwd || newPwd !== confirmPwd || loading}
+        className={loading ? "ring-loader ring-loader--x-small" : ""}
+      >
+        save
+      </button>
     </div>
   );
 }
 
 function AccoundDeleteBtn(props) {
   const [agreed, setAggred] = useState(false);
+  const history = useHistory();
+  const { user } = useUserAuth();
+  async function deleteUser() {
+    const res = await fetch("/user/remove-user");
+    history.push("/");
+  }
   return (
     <div {...props}>
-      <button disabled={!agreed}>delete my accound</button>
+      <button onClick={deleteUser} disabled={!agreed}>
+        delete my accound
+      </button>
       <label>
         <input type="checkbox" onChange={() => setAggred((bool) => !bool)} /> I
         agree to delete my accound

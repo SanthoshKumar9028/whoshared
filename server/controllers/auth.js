@@ -1,42 +1,7 @@
 import User from "../models/user";
-import jwt from "jsonwebtoken";
 
-function handleError(e) {
-  let errors = {
-    username: "",
-    originalname: "",
-    password: "",
-  };
-
-  //handling errors for login
-  if (e.message === "invalid username") {
-    errors.username = "invalid username";
-    return errors;
-  }
-  if (e.message === "invalid password") {
-    errors.password = "invalid password";
-    return errors;
-  }
-
-  //handling errors for adding the user
-  if (e.code === 11000) {
-    errors.username = "user name is alredy taken";
-    return errors;
-  }
-
-  if (e.message.includes("user validation failed")) {
-    Object.values(e.errors).forEach(({ properties }) => {
-      errors[properties.path] = properties.message;
-    });
-  }
-  return errors;
-}
-
-const maxAge = 60 * 60 * 24 * 3;
-
-function createToken(payload) {
-  return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: maxAge });
-}
+import { maxAge, createToken } from "../lib/tokenCreater";
+import { handleError } from "../lib/validators";
 
 //to verify the user
 export function get_is_user(req, res) {
@@ -73,6 +38,7 @@ export async function post_login_user(req, res) {
       httpOnly: true,
       maxAge: maxAge * 1000,
     });
+    res.status(200);
     res.json({ user });
   } catch (e) {
     // console.log(e);

@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 
+import hashPassword from "../lib/hashPassword";
+
 const reportSchema = new mongoose.Schema({
   username: String,
   reasons: Array,
@@ -34,8 +36,7 @@ const userSchema = new mongoose.Schema({
 //middlewares
 //to hash the password
 userSchema.pre("save", async function (next) {
-  const salt = await bcrypt.genSalt(Number(process.env.BCRYPT_ROUNDS));
-  this.password = await bcrypt.hash(this.password, salt);
+  this.password = await hashPassword(this.password);
   next();
 });
 

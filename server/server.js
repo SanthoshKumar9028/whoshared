@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 
 import authRouter from "./routers/auth";
+import userRouter from "./routers/user";
 
 //to configure the environment variables
 require("dotenv").config();
@@ -23,26 +24,26 @@ server.use((req, res, next) => {
 
 //routers
 server.use("/auth", authRouter);
+server.use("/user", userRouter);
 
 //servering the index.html file
 server.get("/*", (request, response) => {
   response.sendFile(path.resolve("./build/index.html"));
 });
 
-// console.log(process.env.DB_URL);
 // db connection
-// mongoose.connect(
-//   process.env.DB_URL,
-//   {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true,
-//     useFindAndModify: false,
-//     useCreateIndex: true,
-//   },
-//   (err) => {
-//     if (err) console.log(err);
-//   }
-// );
+mongoose.connect(
+  process.env.DB_URL,
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+    useCreateIndex: true,
+  },
+  (err) => {
+    if (err) console.log(err);
+  }
+);
 
 const wsServer = server.listen(PORT, () =>
   console.log(`waiting on port ${PORT}`)
