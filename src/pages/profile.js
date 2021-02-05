@@ -21,7 +21,7 @@ function InfoForm(props) {
   async function changeUserName() {
     try {
       setLoading(true);
-      const res = await fetch("http://localhost:3000/user/update-username", {
+      const res = await fetch("/user/update-username", {
         method: "POST",
         body: JSON.stringify({ username }),
         headers: {
