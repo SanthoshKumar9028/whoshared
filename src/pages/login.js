@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 
 import "./login.scss";
 import Layout from "../components/layout";
+import { assignUserProps } from "../lib/assignProps";
 
 export default function Login({ setUser }) {
   const [username, setUsername] = useState("batmannew");
@@ -34,14 +35,7 @@ export default function Login({ setUser }) {
         setValidationErrors(data.errors);
       }
       if (data.user) {
-        data.user.isLogedIn = true;
-        data.user.logout = async function () {
-          try {
-            await fetch("/auth/logout-user");
-          } finally {
-            setUser({ isLogedIn: false });
-          }
-        };
+        assignUserProps(data.user, setUser);
         setUser(data.user);
         history.replace("/profile");
       }

@@ -4,6 +4,7 @@ import { useHistory } from "react-router-dom";
 import "./profile.scss";
 import Layout from "../components/layout";
 import { useUserAuth } from "../lib/hooks";
+import { assignUserProps } from "../lib/assignProps";
 
 function InfoForm(props) {
   const [username, setUsername] = useState("");
@@ -29,23 +30,15 @@ function InfoForm(props) {
         },
       });
       const data = await res.json();
-      // console.log(data);
+      // console.log(user);
       if (data.errors) {
         setErrors(data.errors);
       }
       if (data.user) {
-        data.user.isLogedIn = true;
-        data.user.changeUser = user.changeUser;
-        data.user.logout = async function () {
-          try {
-            await fetch("/auth/logout-user");
-          } finally {
-            user.changeUser({ isLogedIn: false });
-          }
-        };
         //reset the errors
         setErrors({});
         //update the user
+        assignUserProps(data.user, user.changeUser);
         user.changeUser(data.user);
       }
     } catch (e) {
