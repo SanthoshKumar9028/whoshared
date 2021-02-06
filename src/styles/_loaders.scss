@@ -25,6 +25,11 @@
     animation: rotate 1s infinite;
   }
 }
+.ring-loader--tp-bg {
+  &::before {
+    background-color: transparent;
+  }
+}
 .ring-loader--small {
   &::after {
     width: 25px;

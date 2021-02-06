@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 
 export function blockUnauthorizedUser(req, res, next) {
-  console.log(req._user_);
+  // console.log(req._user_);
   if (req._user_) return next();
 
   res.status(401);

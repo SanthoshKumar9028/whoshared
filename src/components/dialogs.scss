@@ -1,0 +1,85 @@
+@import "../styles/config";
+@import "../styles/loaders";
+
+.dialog-container {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: #333;
+  z-index: 1000;
+  &__status {
+    text-align: center;
+    color: white;
+  }
+}
+
+.report-dialog {
+  max-width: 340px;
+  padding: 1.5rem 2rem;
+  color: lighten($color: $secondary-color, $amount: 80%);
+  background-color: $secondary-color;
+  border-radius: 10px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  white-space: nowrap;
+  transform: translate(-50%, -50%);
+  &__title {
+    margin: 0;
+  }
+  &__reasons-title {
+    padding: 0.5em 0;
+    display: block;
+  }
+  &__reasons {
+    border: none;
+    margin: 0;
+    padding: 0;
+  }
+  &__error {
+    // text-align: center;
+    margin-top: 0.5em;
+    color: red;
+  }
+  &__form label {
+    display: inline-block;
+    padding-left: 5px;
+  }
+  &__submit-btn {
+    display: block;
+    margin: 0.5em auto;
+    padding: 0.5em 2.5em;
+    font-size: inherit;
+    border: none;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    background-color: $primary-color;
+    transition: background-color 300ms, color 300ms;
+    cursor: pointer;
+    &:hover {
+      color: black;
+      background-color: lighten($color: $primary-color, $amount: 20%);
+    }
+  }
+  &__close-btn {
+    position: absolute;
+    background-color: white;
+    border: none;
+    font-weight: bold;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    right: 10px;
+    top: 10px;
+    cursor: pointer;
+  }
+}
+
+@media screen and (min-width: 600px) {
+  .report-dialog {
+    font-size: 1.1rem;
+  }
+}

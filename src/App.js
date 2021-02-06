@@ -9,6 +9,7 @@ import GroupChat from "./pages/group-chat";
 import FriendsList from "./pages/friends-list";
 import LoadingIndicator from "./components/loading-indicator";
 import { userContext } from "./lib/contexts";
+import { assignUserProps } from "./lib/assignProps";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -21,17 +22,12 @@ function App() {
         const data = await fetch("/user/user-info").then((res) => res.json());
         // console.log(data);
         if (data.user) {
-          data.user.isLogedIn = true;
-          data.user.changeUser = setUser;
-          data.user.logout = async function () {
-            try {
-              await fetch("/auth/logout-user");
-            } finally {
-              setUser(emptyUser);
-            }
-          };
+          //assiginig user props
+          assignUserProps(data.user, setUser);
           setUser(data.user);
-        } else setUser(emptyUser);
+        } else {
+          setUser(emptyUser);
+        }
       } catch (e) {
         setUser(emptyUser);
       } finally {
