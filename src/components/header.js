@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 
 import "./header.scss";
 import { GuestMenu, UserMenu } from "./menu";

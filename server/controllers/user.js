@@ -74,7 +74,7 @@ export const post_update_password = async (req, res) => {
   }
 };
 
-export const delete_remove_user = async (req, res) => {
+export const get_remove_user = async (req, res) => {
   try {
     const user = await User.findOneAndDelete({ username: req._user_.username });
     if (user) {
@@ -84,6 +84,23 @@ export const delete_remove_user = async (req, res) => {
   } catch (e) {
     res.status(500);
     res.end();
+  }
+};
+
+export const post_report_user = async (req, res) => {
+  const { reasons, reportUsername } = req.body;
+  try {
+    const r = await User.updateOne(
+      { username: reportUsername },
+      { $push: { reports: { username: req._user_.username, reasons } } }
+    );
+    console.log(r);
+    res.status(201);
+    res.json({ ok: true });
+  } catch (e) {
+    console.log(e);
+    res.status(500);
+    res.json({ ok: false });
   }
 };
 
