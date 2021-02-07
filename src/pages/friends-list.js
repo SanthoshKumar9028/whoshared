@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
 
 import "./friends-list.scss";
 import Layout from "../components/layouts/layout";
 import { useUserAuth } from "../lib/hooks";
 import { ReportDialog } from "../components/dialogs";
+import withUserAutentication from "../components/withUserAuthentication";
 
 function UserCard(props) {
   let { username, reportUser, className = "", ...rest } = props;
@@ -27,14 +27,13 @@ function UserCard(props) {
   );
 }
 
-export default function FriendsList() {
+export function FriendsList() {
   const [loading, setLoading] = useState(false);
   const [dialogVisibility, setDialogVisibility] = useState(false);
   const [reportableUser, setReportableUser] = useState("");
   const [users, setUsers] = useState([]);
   const [error, setError] = useState(null);
-  const { user, isUser, toRedirectPath } = useUserAuth();
-  const history = useHistory();
+  const { user } = useUserAuth();
 
   const toggleDialogVisibility = useCallback(() => {
     setDialogVisibility((prv) => !prv);
@@ -52,7 +51,7 @@ export default function FriendsList() {
         const res = await fetch("/user/users-info");
         let allusers = await res.json();
         // removeing the current user
-        allusers = allusers.filter((u) => u.username != user.username);
+        allusers = allusers.filter((u) => u.username !== user.username);
         setUsers(
           allusers.map((user) => ({ id: user._id, username: user.username }))
         );
@@ -65,11 +64,6 @@ export default function FriendsList() {
     }
     fetchUsers();
   }, [user.username]);
-
-  if (!isUser) {
-    history.replace(toRedirectPath);
-    return null;
-  }
 
   return (
     <Layout>
@@ -102,3 +96,5 @@ export default function FriendsList() {
     </Layout>
   );
 }
+
+export default withUserAutentication(FriendsList);

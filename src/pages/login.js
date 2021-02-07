@@ -6,8 +6,8 @@ import GridLayout from "../components/layouts/grid-layout";
 import { assignUserProps } from "../lib/assignProps";
 
 export default function Login({ setUser }) {
-  const [username, setUsername] = useState("batmannew");
-  const [password, setPassword] = useState("arun567");
+  const [username, setUsername] = useState("batman");
+  const [password, setPassword] = useState("12345678");
   const [loading, setLoading] = useState(false);
   const [validationErrors, setValidationErrors] = useState({
     username: "",

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import "./home.scss";
 import GridLayout from "../components/layouts/grid-layout";
 
-export default function Home() {
+export function Home() {
   const [headerProps] = useState({ guestmenu: true });
   return (
     <GridLayout headerProps={headerProps}>
@@ -26,3 +26,5 @@ export default function Home() {
     </GridLayout>
   );
 }
+
+export default Home;

@@ -16,6 +16,7 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
     const validateUser = async () => {
       const emptyUser = { isLogedIn: false };
       try {

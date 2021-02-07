@@ -5,6 +5,7 @@ import "./profile.scss";
 import GridLayout from "../components/layouts/grid-layout";
 import { useUserAuth } from "../lib/hooks";
 import { assignUserProps } from "../lib/assignProps";
+import withUserAutentication from "../components/withUserAuthentication";
 
 function InfoForm(props) {
   const [username, setUsername] = useState("");
@@ -17,7 +18,9 @@ function InfoForm(props) {
   useEffect(() => {
     setUsername(user.username);
     setOriginalname(user.originalname);
-  }, []);
+  }, [user.username, user.originalname]);
+
+  if (!user) return null;
 
   async function changeUserName() {
     try {
@@ -127,9 +130,8 @@ function PasswordForm(props) {
 function AccoundDeleteBtn(props) {
   const [agreed, setAggred] = useState(false);
   const history = useHistory();
-  const { user } = useUserAuth();
   async function deleteUser() {
-    const res = await fetch("/user/remove-user");
+    await fetch("/user/remove-user");
     history.push("/");
   }
   return (
@@ -145,13 +147,8 @@ function AccoundDeleteBtn(props) {
   );
 }
 
-export default function Profile() {
-  const { isUser, toRedirectPath, user } = useUserAuth();
-  const history = useHistory();
-  if (!isUser) {
-    history.replace(toRedirectPath);
-    return null;
-  }
+export function Profile() {
+  const { user } = useUserAuth();
   return (
     <GridLayout>
       <main className="profile">
@@ -180,3 +177,5 @@ export default function Profile() {
     </GridLayout>
   );
 }
+
+export default withUserAutentication(Profile);

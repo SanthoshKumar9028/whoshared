@@ -1,19 +1,14 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
 
 import GridLayout from "../components/layouts/grid-layout";
-import { useUserAuth } from "../lib/hooks";
+import withUserAutentication from "../components/withUserAuthentication";
 
-export default function GroupChat() {
-  const { isUser, toRedirectPath } = useUserAuth();
-  const history = useHistory();
-  if (!isUser) {
-    history.replace(toRedirectPath);
-    return null;
-  }
+export function GroupChat() {
   return (
     <GridLayout>
       <h1>GroupChat</h1>
     </GridLayout>
   );
 }
+
+export default withUserAutentication(GroupChat);
