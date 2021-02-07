@@ -1,7 +1,7 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
 
-import Layout from "../components/layout";
+import GridLayout from "../components/layouts/grid-layout";
 import { useUserAuth } from "../lib/hooks";
 
 export default function GroupChat() {
@@ -12,8 +12,8 @@ export default function GroupChat() {
     return null;
   }
   return (
-    <Layout>
+    <GridLayout>
       <h1>GroupChat</h1>
-    </Layout>
+    </GridLayout>
   );
 }

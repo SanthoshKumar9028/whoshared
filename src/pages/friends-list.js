@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 
 import "./friends-list.scss";
-import Layout from "../components/layout";
+import Layout from "../components/layouts/layout";
 import { useUserAuth } from "../lib/hooks";
 import { ReportDialog } from "../components/dialogs";
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 
 import "./profile.scss";
-import Layout from "../components/layout";
+import GridLayout from "../components/layouts/grid-layout";
 import { useUserAuth } from "../lib/hooks";
 import { assignUserProps } from "../lib/assignProps";
 
@@ -153,7 +153,7 @@ export default function Profile() {
     return null;
   }
   return (
-    <Layout>
+    <GridLayout>
       <main className="profile">
         <div className="profile__intro">
           <div className="profile__section">
@@ -177,6 +177,6 @@ export default function Profile() {
         </div>
         <AccoundDeleteBtn className="profile__section profile__account-deletion-content" />
       </main>
-    </Layout>
+    </GridLayout>
   );
 }

@@ -1,7 +1,6 @@
 @import "../styles/partials";
 
 .home {
-  min-height: 80vh;
   display: flex;
   &__content {
     @extend %container;

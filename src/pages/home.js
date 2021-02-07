@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 import "./home.scss";
-import Layout from "../components/layout";
+import GridLayout from "../components/layouts/grid-layout";
 
 export default function Home() {
   const [headerProps] = useState({ guestmenu: true });
   return (
-    <Layout headerProps={headerProps}>
+    <GridLayout headerProps={headerProps}>
       <main className="home">
         <div className="home__content">
           <div className="home__intro">
@@ -23,6 +23,6 @@ export default function Home() {
           </div>
         </div>
       </main>
-    </Layout>
+    </GridLayout>
   );
 }

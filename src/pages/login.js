@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 
 import "./login.scss";
-import Layout from "../components/layout";
+import GridLayout from "../components/layouts/grid-layout";
 import { assignUserProps } from "../lib/assignProps";
 
 export default function Login({ setUser }) {
@@ -49,7 +49,7 @@ export default function Login({ setUser }) {
   };
 
   return (
-    <Layout>
+    <GridLayout>
       <main className="login">
         <form className="login__form" onSubmit={handleSubmit}>
           <div>
@@ -94,6 +94,6 @@ export default function Login({ setUser }) {
           </div>
         </form>
       </main>
-    </Layout>
+    </GridLayout>
   );
 }

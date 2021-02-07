@@ -1,0 +1,10 @@
+.grid-layout {
+  display: grid;
+  min-height: 100vh;
+  &__top {
+    align-self: start;
+  }
+  &__bottom {
+    align-self: end;
+  }
+}
