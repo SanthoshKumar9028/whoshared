@@ -9,6 +9,7 @@ export default function Login({ setUser }) {
   const [username, setUsername] = useState("batman");
   const [password, setPassword] = useState("12345678");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [validationErrors, setValidationErrors] = useState({
     username: "",
     password: "",
@@ -68,13 +69,20 @@ export default function Login({ setUser }) {
               {validationErrors.username}
             </p>
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               placeholder="password"
               required
               className="login__password"
               value={password}
               onChange={updatePassword}
             />
+            <label className="login__toggle-password">
+              <input
+                type="checkbox"
+                onClick={() => setShowPassword(!showPassword)}
+              />
+              {showPassword ? "Hide" : "Show"} passsword
+            </label>
             <p className="login__error login__error--password">
               {validationErrors.password}
             </p>

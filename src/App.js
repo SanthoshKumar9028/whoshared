@@ -20,7 +20,8 @@ function App() {
     const validateUser = async () => {
       const emptyUser = { isLogedIn: false };
       try {
-        const data = await fetch("/user/user-info").then((res) => res.json());
+        // const data = await fetch("/user/user-info").then((res) => res.json());
+        const data = await fetch("/auth/is-user").then((res) => res.json());
         // console.log(data);
         if (data.user) {
           //assiginig user props

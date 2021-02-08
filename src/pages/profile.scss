@@ -5,6 +5,9 @@
   overflow: hidden;
   &__section {
     @extend %container;
+    &--form {
+      margin-right: auto;
+    }
   }
   &__intro {
     min-height: 40vh;
@@ -42,17 +45,31 @@
     margin-top: 100px;
     text-align: center;
   }
-  &__info,
-  &__pwd-info {
-    max-width: 800px;
-    padding: 1em;
+  &__form-container {
+    &--info {
+      background-color: teal;
+    }
+    &--pwd {
+      background-color: #333;
+    }
+    &--info,
+    &--pwd {
+      color: white;
+      padding: 3em 0;
+    }
+  }
+  &__form-container + &__form-container {
     margin-bottom: 3rem;
+  }
+  &__form-content {
+    width: 90%;
+    max-width: 800px;
+    margin: 0 auto;
   }
   &__form {
     max-width: 400px;
     font-size: 1.2rem;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
-    padding: 1em;
+    // box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
     border-radius: 10px;
     & > * {
       display: block;
@@ -72,10 +89,11 @@
       margin: 0.5em 0 0.3em;
     }
     & > input {
+      font-size: initial;
       padding: 0.4rem;
       width: 80%;
       border: none;
-      background-color: inherit;
+      background: none;
       border-bottom: 2px solid black;
       outline: none;
       transition: border-bottom 200ms;
@@ -99,6 +117,12 @@
       &:disabled {
         background-color: lighten($secondary-color, 30%);
         cursor: not-allowed;
+      }
+    }
+    &--info,
+    &--pwd {
+      & > input {
+        color: white;
       }
     }
   }

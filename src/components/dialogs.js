@@ -58,7 +58,7 @@ export function ReportDialog(props) {
       setDialogStatus("Someting went wrong try again later");
     }
     setErrors({});
-    setTimeout(() => setDialogStatus(""), 1000);
+    setTimeout(() => setDialogStatus(""), 1500);
     setLoading(false);
   };
 

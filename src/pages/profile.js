@@ -78,6 +78,12 @@ function PasswordForm(props) {
   const [errors, setErrors] = useState({});
 
   async function changePassword() {
+    if (newPwd !== confirmPwd) {
+      setErrors({
+        password: "confirm password should match with new password",
+      });
+      return;
+    }
     try {
       setLoading(true);
       const res = await fetch("/user/update-password", {
@@ -109,7 +115,11 @@ function PasswordForm(props) {
     <div {...props}>
       <h2 className="profile__form-title">change password</h2>
       <label>new password</label>
-      <input value={newPwd} onChange={(e) => setNewPwd(e.target.value)} />
+      <input
+        type="password"
+        value={newPwd}
+        onChange={(e) => setNewPwd(e.target.value)}
+      />
       <label>confirm password</label>
       <input
         value={confirmPwd}
@@ -118,7 +128,7 @@ function PasswordForm(props) {
       <span className="profile__form-error">{errors.password}</span>
       <button
         onClick={changePassword}
-        disabled={!newPwd || newPwd !== confirmPwd || loading}
+        disabled={loading}
         className={loading ? "ring-loader ring-loader--x-small" : ""}
       >
         save
@@ -166,11 +176,15 @@ export function Profile() {
         <div className="profile__section">
           <h1 className="profile__username">Wellcome {user.username}</h1>
         </div>
-        <div className="profile__info profile__section">
-          <InfoForm className="profile__form" />
+        <div className="profile__form-container profile__form-container--info">
+          <div className="profile__form-content">
+            <InfoForm className="profile__form profile__form--info" />
+          </div>
         </div>
-        <div className="profile__pwd-info profile__section">
-          <PasswordForm className="profile__form" />
+        <div className="profile__form-container profile__form-container--pwd">
+          <div className="profile__form-content">
+            <PasswordForm className="profile__form profile__form--pwd" />
+          </div>
         </div>
         <AccoundDeleteBtn className="profile__section profile__account-deletion-content" />
       </main>
