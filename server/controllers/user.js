@@ -117,7 +117,15 @@ export const get_user_info = async (req, res) => {
   }
 };
 export const get_users_info = async (req, res) => {
-  const users = await User.find({}, { password: 0 });
-  // console.log(users);
-  res.json(users);
+  try {
+    const users = await User.find({}, { password: 0 });
+    // console.log(users);
+    res.json(users);
+  } catch (e) {
+    res.status(500);
+    res.json([]);
+    throw e;
+  } finally {
+    res.end();
+  }
 };

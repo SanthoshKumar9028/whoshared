@@ -5,7 +5,7 @@ import "./App.scss";
 import Home from "./pages/home";
 import Login from "./pages/login";
 import Profile from "./pages/profile";
-import GroupChat from "./pages/group-chat";
+import ChatRoom from "./pages/chat-room";
 import FriendsList from "./pages/friends-list";
 import LoadingIndicator from "./components/loading-indicator";
 import { userContext } from "./lib/contexts";
@@ -51,8 +51,8 @@ function App() {
           <Route path="/profile">
             <Profile />
           </Route>
-          <Route path="/group-chat">
-            <GroupChat />
+          <Route path="/chat-room">
+            <ChatRoom />
           </Route>
           <Route path="/friends">
             <FriendsList />

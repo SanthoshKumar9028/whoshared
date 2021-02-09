@@ -67,7 +67,7 @@ export function UserMenu(props) {
               </Link>
             </li>
             <li className="nav__item">
-              <Link to="/group-chat" className="nav__link">
+              <Link to="/chat-room" className="nav__link">
                 chat room
               </Link>
             </li>

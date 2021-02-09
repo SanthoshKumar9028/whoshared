@@ -1,0 +1,219 @@
+@import "../styles/config";
+
+.chat-room {
+  position: relative;
+  &__chat-box ul,
+  &__typing-user ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  &__chat-box {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  &__msgs {
+    margin-top: auto;
+  }
+  &__msgs li {
+    position: relative;
+    border: 2px solid;
+    padding: 0.5em;
+    margin: 0.5em;
+  }
+  &__msgs li::after {
+    content: "";
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    background-color: black;
+  }
+  &__msgs li.me {
+    border-color: $primary-color;
+    border-radius: 10px 10px 0;
+    text-align: right;
+    box-shadow: inset -2px 0 $primary-color;
+  }
+  &__msgs li.others {
+    border-color: #333;
+    border-radius: 0 10px 10px;
+    box-shadow: inset 2px 0 #333;
+  }
+  &__msgs li.me::after {
+    background-color: $primary-color;
+    right: -5px;
+    bottom: -2px;
+    border-top-right-radius: 5px;
+  }
+  &__msgs li.others::after {
+    background-color: #333;
+    left: -5px;
+    top: -2px;
+    border-top-left-radius: 5px;
+  }
+  &__inputs {
+    margin-top: auto;
+    padding: 0.2em;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.5em 0;
+    background-color: $secondary-color;
+    textarea {
+      width: 65%;
+      margin-right: 1em;
+      padding: 0.3em;
+      resize: none;
+    }
+    button {
+      font-size: 1.5rem;
+      border: none;
+      text-align: center;
+      color: white;
+      background-color: $primary-color;
+      border-radius: 5px;
+    }
+  }
+  &__typing-user {
+    width: 100%;
+    background-color: #333;
+    min-height: 50vh;
+    position: absolute;
+    left: -150%;
+    top: 3.5rem;
+    display: block;
+    transition: left 200ms;
+    ul {
+      padding: 0 2em;
+    }
+    li {
+      margin: 0.5em 0;
+    }
+  }
+  &__typing-user--show {
+    left: 0;
+  }
+  &__typing-user--hidde {
+    left: -150%;
+  }
+  &__user-item {
+    color: white;
+    &--online {
+      span {
+        color: green;
+      }
+    }
+    &--offline {
+      span {
+        color: red;
+      }
+    }
+    &--typing {
+      color: green;
+      &::after {
+        content: " is typing";
+      }
+    }
+  }
+  &__header {
+    background-color: #333;
+    display: flex;
+    padding: 0.5em;
+    font-size: 1.1rem;
+    p {
+      margin: auto;
+      color: white;
+    }
+    .date-container {
+      width: 40px;
+      height: 40px;
+      overflow: hidden;
+      position: relative;
+      border-radius: 4px;
+      input {
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        font-size: 1.5rem;
+        border: none;
+        padding: 0.2em;
+      }
+    }
+    .toggle-btn {
+      button {
+        font-size: 1.5rem;
+        font-weight: bold;
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        margin-right: 0.5em;
+        border: none;
+        border-radius: 4px;
+      }
+    }
+  }
+}
+
+@media (min-width: 600px) {
+  .chat-room {
+    display: flex;
+    justify-content: space-around;
+    &__chat-box {
+      width: 65%;
+      margin: 0 2em;
+    }
+    &__typing-user {
+      width: 30%;
+      margin-right: auto;
+      position: static;
+      padding-top: 2rem;
+      background-color: #333;
+      min-height: auto;
+    }
+    .toggle-btn {
+      button {
+        display: none;
+      }
+    }
+  }
+}
+
+@media (min-width: 1100px) {
+  .chat-room {
+    &__chat-box {
+      width: 75%;
+      margin: 0 2em;
+      flex-direction: row;
+    }
+    &__chat-header-box-container {
+      flex: 2;
+      margin-right: 20px;
+    }
+    &__inputs {
+      flex: 1;
+      height: 90px;
+      margin-bottom: 1em;
+      flex-direction: column;
+      justify-content: space-evenly;
+      textarea {
+        resize: vertical;
+      }
+      button {
+        width: 100px;
+        border-radius: 5px;
+      }
+    }
+    &__typing-user {
+      width: 20%;
+      margin-right: auto;
+      position: static;
+      padding-top: 2rem;
+      background-color: #333;
+      min-height: auto;
+    }
+  }
+}

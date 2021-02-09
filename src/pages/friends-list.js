@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 
 import "./friends-list.scss";
-import Layout from "../components/layouts/layout";
+import GridLayout from "../components/layouts/grid-layout";
 import { useUserAuth } from "../lib/hooks";
 import { ReportDialog } from "../components/dialogs";
 import withUserAutentication from "../components/withUserAuthentication";
@@ -49,6 +49,7 @@ export function FriendsList() {
     async function fetchUsers() {
       try {
         const res = await fetch("/user/users-info");
+        if (res.ok === false) throw Error("response is not ok");
         let allusers = await res.json();
         // removeing the current user
         allusers = allusers.filter((u) => u.username !== user.username);
@@ -66,7 +67,7 @@ export function FriendsList() {
   }, [user.username]);
 
   return (
-    <Layout>
+    <GridLayout>
       <div className="friends-list">
         <ReportDialog
           visible={dialogVisibility}
@@ -81,7 +82,7 @@ export function FriendsList() {
           }
         >
           {error ? (
-            <h2 className="friends-list__error">something went wron</h2>
+            <h2 className="friends-list__error">something went wrong</h2>
           ) : (
             users.map((user) => (
               <UserCard
@@ -93,7 +94,7 @@ export function FriendsList() {
           )}
         </div>
       </div>
-    </Layout>
+    </GridLayout>
   );
 }
 
