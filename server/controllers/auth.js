@@ -33,6 +33,7 @@ export async function post_login_user(req, res) {
   const { username, password } = req.body;
   try {
     const user = await User.login(username, password);
+    await User.updateOne({ username }, { $set: { logedin: true } });
     //adding jwt token
     res.cookie("jwt", createToken({ id: user._id, username }), {
       httpOnly: true,
@@ -48,10 +49,19 @@ export async function post_login_user(req, res) {
   }
 }
 
-export function get_logout_user(req, res) {
-  res.cookie("jwt", "", { maxAge: 1 });
-  res.json({});
-  res.end();
+export async function get_logout_user(req, res) {
+  try {
+    await User.updateOne(
+      { username: req._user_.username },
+      { $set: { logedin: false } }
+    );
+  } catch (e) {
+    //for handling errors
+  } finally {
+    res.cookie("jwt", "", { maxAge: 1 });
+    res.json({});
+    res.end();
+  }
 }
 
 export default { get_is_user, post_add_user, post_login_user, get_logout_user };

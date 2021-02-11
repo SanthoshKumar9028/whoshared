@@ -4,7 +4,7 @@ import "./grid-layout.scss";
 import Header from "../header";
 import Footer from "../footer";
 
-export function GridLayoutWithouFooter({ children, headerProps, footerProps }) {
+export function GridLayoutWithoutFooter({ children, headerProps }) {
   return (
     <div className="grid-layout grid-layout--without-footer">
       <Header {...headerProps} className="grid-layout__top" />

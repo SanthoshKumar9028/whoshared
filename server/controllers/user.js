@@ -1,3 +1,4 @@
+import Message from "../models/message";
 import User from "../models/user";
 
 import { createToken, maxAge } from "../lib/tokenCreater";
@@ -24,7 +25,14 @@ export const post_update_username = async (req, res) => {
       res.status(401);
       throw new UserValidationError("username", "unauthorized user");
     }
-    await User.updateOne({ username: req._user_.username }, { username });
+    const filter = { username: req._user_.username };
+    const value = { $set: { username } };
+    //updating the username
+    await User.updateOne(filter, value);
+
+    //updating the username in messages
+    await Message.updateMany(filter, value);
+
     user.username = username;
     res.cookie("jwt", createToken({ id: user._id, username }), {
       httpOnly: true,
@@ -128,4 +136,54 @@ export const get_users_info = async (req, res) => {
   } finally {
     res.end();
   }
+};
+
+export const get_user_states = async (req, res) => {
+  try {
+    const users = await User.find({}, { logedin: 1, username: 1 });
+    // console.log(users);
+    res.json(users);
+  } catch (e) {
+    res.status(500);
+    res.json([]);
+    throw e;
+  } finally {
+    res.end();
+  }
+};
+
+export const get_messages_on = async (req, res) => {
+  // console.log(req.query);
+  if (req.query.date === undefined) {
+    res.status(400);
+    res.json([]);
+    return;
+  }
+  const gotDate = new Date(req.query.date);
+  // const gotDate = new Date();
+  const year = gotDate.getFullYear();
+  const month = gotDate.getMonth();
+  const date = gotDate.getDate();
+
+  const curDate = new Date(year, month, date, 0, 0, 0);
+  const nextDate = new Date(year, month, date + 1, 0, 0, 0);
+
+  try {
+    const messages = await Message.find({
+      $and: [{ sentDate: { $gte: curDate } }, { sentDate: { $lt: nextDate } }],
+    });
+    // console.log(messages);
+    res.json(messages);
+  } catch (e) {
+    res.status(500);
+    res.json([]);
+    throw e;
+  } finally {
+    res.end();
+  }
+};
+
+export const get_today_messages = async (req, res) => {
+  req.query.date = Date.now();
+  get_messages_on(req, res);
 };

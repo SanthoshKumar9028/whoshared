@@ -1,26 +1,58 @@
-import React, { PureComponent } from "react";
+import React, { PureComponent, useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
 
 import "./chat-room.scss";
-import { GridLayoutWithouFooter } from "../components/layouts/grid-layout";
+import { GridLayoutWithoutFooter } from "../components/layouts/grid-layout";
 import { userContext } from "../lib/contexts";
 import { useUserAuth } from "../lib/hooks";
 import withUserAutentication from "../components/withUserAuthentication";
 
+function getRemainingHeight() {
+  const headerHeight = document.querySelector(".header").offsetHeight;
+  const chatRoomHeaderHeight = document.querySelector(".chat-room__header")
+    .offsetHeight;
+  const chatRoomInputsHeight = document.querySelector("div.chat-room__inputs")
+    .offsetHeight;
+  const height = window.innerHeight - (headerHeight + chatRoomHeaderHeight);
+  if (window.innerWidth >= 1100) return height + "px";
+  return height - chatRoomInputsHeight + "px";
+}
+
 function ChatBox(props) {
+  const [height, setHeight] = useState({ height: "100%" });
   const { isUser, user } = useUserAuth();
+  const { msgs, className = "", chatBoxLoading, ...rest } = props;
+  let loadingclassName = className + " ring-loader";
+  useEffect(() => {
+    setHeight({ height: getRemainingHeight() });
+  }, []);
+
   if (isUser === false) return null;
-  const { msgs, ...rest } = props;
+  if (chatBoxLoading)
+    return (
+      <section className={loadingclassName} {...rest} style={height}></section>
+    );
+  // console.log(msgs);
   return (
-    <section {...rest}>
+    <section className={className} {...rest} style={height}>
       {msgs.length > 0 ? (
         <ul>
           {msgs.map((msg) => (
             <li
-              className={msg.user === user.username ? "me" : "others"}
-              key={msg.data}
+              key={msg._id}
+              className={msg.username === user.username ? "me" : "others"}
             >
-              {msg.data}
+              <div>
+                <em>
+                  <strong>
+                    {msg.username === user.username ? "You" : msg.username}
+                  </strong>
+                </em>
+                <time dateTime={new Date(msg.sentDate).toLocaleTimeString()}>
+                  {new Date(msg.sentDate).toLocaleTimeString()}
+                </time>
+              </div>
+              <p>{msg.body}</p>
             </li>
           ))}
         </ul>
@@ -30,10 +62,10 @@ function ChatBox(props) {
 }
 
 function ChatHeader(props) {
-  const { handleDatePicker, toggleOnlineFriends, ...rest } = props;
+  const { handleDatePicker, toggleOnlineFriends, headerTitle, ...rest } = props;
   return (
     <div {...rest}>
-      <p>header</p>
+      <p>{headerTitle || "header"}</p>
       <div className="toggle-btn">
         <button onClick={toggleOnlineFriends}>&#9741;</button>
       </div>
@@ -45,20 +77,107 @@ function ChatHeader(props) {
 }
 
 function TypingUsers(props) {
+  const [loading, setLoading] = useState(true);
+  const [hasError, setHasError] = useState(true);
+  const [users, setUsers] = useState([]);
   const { user: currentUser = {} } = useUserAuth();
-  const { users, ...rest } = props;
+  const {
+    className = "",
+    userTypingStarted,
+    userTypingStoped,
+    ...rest
+  } = props;
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function getUserStates() {
+      try {
+        const res = await fetch("/user/user-states", {
+          signal: controller.signal,
+        });
+        if (res.ok) {
+          const u = await res.json();
+          // console.log(u);
+          setUsers(u);
+        }
+        setLoading(false);
+        setHasError(false);
+      } catch (e) {
+        console.log(e);
+        if (e.name !== "AbortError") {
+          setHasError(true);
+          setLoading(false);
+        }
+      }
+    }
+    getUserStates();
+    return () => controller.abort();
+  }, []);
+
+  useEffect(() => {
+    // changing the user typing state based on the props
+    let newUserState = users.map((user) => {
+      if (user.username === userTypingStarted.username)
+        return {
+          ...user,
+          isTyping: true,
+        };
+      return user;
+    });
+    setUsers(newUserState);
+  }, [userTypingStarted]);
+
+  useEffect(() => {
+    // changing the user typing state based on the props
+    let newUserState = users.map((user) => {
+      if (user.username === userTypingStoped.username)
+        return {
+          ...user,
+          isTyping: false,
+        };
+      return user;
+    });
+
+    setUsers(newUserState);
+  }, [userTypingStoped]);
+
+  if (loading)
+    return (
+      <div className={className}>
+        <h2>Loading...</h2>
+      </div>
+    );
+
+  if (hasError)
+    return (
+      <div className={className}>
+        <h2>Something went wrong.</h2>
+      </div>
+    );
+
   return (
-    <div {...rest}>
+    <div className={className} {...rest}>
+      <h2>Friends</h2>
       {users.length > 0 ? (
         <ul>
-          {users.map((user) => (
-            <li
-              key={user}
-              className="chat-room__user-item chat-room__user-item--online chat-room__user-item--offline"
-            >
-              <span>o</span> {currentUser.username === user ? "you" : user}
-            </li>
-          ))}
+          {users.map((user) =>
+            user.username === currentUser.username ? null : (
+              <li
+                key={user.username}
+                className={`chat-room__user-item ${
+                  user.isTyping ? "chat-room__user-item--typing" : ""
+                } ${
+                  user.logedin
+                    ? "chat-room__user-item--online"
+                    : "chat-room__user-item--offline"
+                }`}
+              >
+                <span>o</span>
+                {user.username}
+              </li>
+            )
+          )}
         </ul>
       ) : null}
     </div>
@@ -71,15 +190,50 @@ class ChatRoom extends PureComponent {
 
     this.user = null;
     this.state = {
-      typingUsers: ["santhosh", "batman"],
-      typingUsersVisibility: true,
+      userTypingStarted: {},
+      userTypingStoped: {},
+      currentMessagesDate: new Date().toLocaleDateString(),
+      chatBoxLoading: true,
+      typingUsersVisibility: false,
       messages: [],
       text: "",
     };
 
-    // { type: "message", user: "santhosh", data: "hi hello" },
-    // { type: "message", user: "name", data: "he hello no bady is there" },
-    // { type: "message", user: "santhosh", data: "alksjf alskjf " },
+    // {
+    //   username: "santhosh",
+    //   sentDate: new Date(2020, 10, 2),
+    //   body: "hi hello",
+    // },
+    // {
+    //   username: "batman",
+    //   sentDate: new Date(2020, 11, 11),
+    //   body: "he hello no bady is there",
+    // },
+    // {
+    //   username: "santhosh",
+    //   sentDate: new Date(2020, 12, 12),
+    //   body: "alksjf alskjf ",
+    // },
+    // {
+    //   username: "santhosh",
+    //   sentDate: new Date(2000, 12, 12),
+    //   body: "alksjf alskjf ",
+    // },
+    // {
+    //   username: "santhosh",
+    //   sentDate: new Date(2000, 12, 10),
+    //   body: "alksjf alskjf ",
+    // },
+    // {
+    //   username: "santhosh",
+    //   sentDate: new Date(2000, 11, 10),
+    //   body: "alksjf alskjf ",
+    // },
+    // {
+    //   username: "santhosh",
+    //   sentDate: new Date(2000, 2, 10),
+    //   body: "alksjf alskjf ",
+    // },
 
     this.wsSupported = true;
     if (typeof WebSocket === "undefined") this.wsSupported = false;
@@ -98,21 +252,19 @@ class ChatRoom extends PureComponent {
     // console.log(msg);
 
     if (msg.type === "message") {
+      // console.log(msg);
+      // return;
       this.setState(({ messages }) => ({
-        messages: [...messages, msg],
+        messages: [...messages, msg.data],
       }));
       return;
     }
-    if (msg.user === this.user) return;
+    if (msg.username === this.user) return;
 
     if (msg.type === "typingstart") {
-      this.setState(({ typingUsers }) => ({
-        typingUsers: [...typingUsers, msg.user],
-      }));
+      this.setState({ userTypingStarted: msg });
     } else if (msg.type === "typingstop") {
-      this.setState(({ typingUsers }) => ({
-        typingUsers: typingUsers.filter((user) => user !== msg.user),
-      }));
+      this.setState({ userTypingStoped: msg });
     }
   }
 
@@ -121,7 +273,7 @@ class ChatRoom extends PureComponent {
     if (e.type === "blur") type = "typingstop";
 
     if (this.wsSupported && this.socket.readyState === WebSocket.OPEN)
-      this.socket.send(JSON.stringify({ type, user: this.user }));
+      this.socket.send(JSON.stringify({ type, username: this.user }));
   }
 
   sendMsg() {
@@ -129,19 +281,25 @@ class ChatRoom extends PureComponent {
       this.socket.send(
         JSON.stringify({
           type: "message",
-          user: this.user,
-          data: this.state.text,
+          data: { username: this.user, body: this.state.text },
         })
       );
       this.setState({ text: "" });
     }
   }
-  handleUnregisterUser() {
-    const { history } = this.props;
-    if (history) history.replace("/register");
-  }
   handleDatePicker(e) {
-    console.log(e.target.value);
+    const url = "user/messages-on?date=" + e.target.value;
+
+    fetch(url)
+      .then((res) => res.json())
+      .then((messages) =>
+        this.setState({
+          messages,
+          currentMessagesDate: new Date(e.target.value).toLocaleDateString(),
+        })
+      )
+      .catch((e) => console.log(e));
+    // console.log(new Date(e.target.value));
   }
   toggleOnlineFriends() {
     this.setState(({ typingUsersVisibility }) => ({
@@ -150,13 +308,31 @@ class ChatRoom extends PureComponent {
   }
 
   componentDidMount() {
-    this.user = this.context.name;
+    //setting the username
+    this.user = this.context.username;
+
+    //setting the websocket
     if (this.wsSupported && this.context.isLogedIn) {
       this.socket = new WebSocket("ws://localhost:8080/chat-room");
-      // this.socket = new WebSocket("ws://localhost:8080/chat-room");
       // this.socket = new WebSocket("wss://whoshared.herokuapp.com/chat-room");
       this.socket.onmessage = this.messageHandler;
     }
+
+    //fetching the today messages
+    fetch("/user/today-messages")
+      .then((res) => res.json())
+      .then((messages) =>
+        this.setState({
+          chatBoxLoading: false,
+          messages,
+        })
+      )
+      .catch(() =>
+        this.setState({
+          chatBoxLoading: false,
+          messages: [],
+        })
+      );
   }
 
   componentWillUnmount() {
@@ -170,47 +346,63 @@ class ChatRoom extends PureComponent {
   }
 
   render() {
-    if (!this.context.isLogedIn) {
-      this.handleUnregisterUser();
-      return <h1>Loading...</h1>;
-    }
-
     return (
-      <GridLayoutWithouFooter>
-        <main className="chat-room container">
+      <GridLayoutWithoutFooter>
+        <main className="chat-room">
           <TypingUsers
             className={`chat-room__typing-user ${
               this.state.typingUsersVisibility
                 ? "chat-room__typing-user--show"
                 : "chat-room__typing-user--hidde"
             }`}
-            users={this.state.typingUsers}
+            userTypingStarted={this.state.userTypingStarted}
+            userTypingStoped={this.state.userTypingStoped}
           />
           <div className="chat-room__chat-box">
             <div className="chat-room__chat-header-box-container">
               <ChatHeader
+                headerTitle={
+                  new Date().toLocaleDateString() ===
+                  this.state.currentMessagesDate
+                    ? "Today"
+                    : this.state.currentMessagesDate
+                }
                 className="chat-room__header"
                 handleDatePicker={this.handleDatePicker}
                 toggleOnlineFriends={this.toggleOnlineFriends}
               />
-              <ChatBox msgs={this.state.messages} className="chat-room__msgs" />
-            </div>
-            <div className="chat-room__inputs">
-              <textarea
-                type="text"
-                value={this.state.text}
-                onChange={(e) => this.setState({ text: e.target.value })}
-                onFocus={this.typing}
-                onBlur={this.typing}
-                placeholder="message"
+              <ChatBox
+                chatBoxLoading={this.state.chatBoxLoading}
+                msgs={this.state.messages}
+                className="chat-room__msgs"
               />
-              <button onClick={this.sendMsg} title="send message">
-                &#10148;
-              </button>
             </div>
+
+            {new Date().toLocaleDateString() ===
+            this.state.currentMessagesDate ? (
+              <div className="chat-room__inputs">
+                <textarea
+                  type="text"
+                  value={this.state.text}
+                  onChange={(e) => this.setState({ text: e.target.value })}
+                  onFocus={this.typing}
+                  onBlur={this.typing}
+                  placeholder="message"
+                />
+                <button
+                  disabled={!this.state.text}
+                  onClick={() => {
+                    setTimeout(() => this.sendMsg(), 10);
+                  }}
+                  title="send message"
+                >
+                  &#10148;
+                </button>
+              </div>
+            ) : null}
           </div>
         </main>
-      </GridLayoutWithouFooter>
+      </GridLayoutWithoutFooter>
     );
   }
 }
