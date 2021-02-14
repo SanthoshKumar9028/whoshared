@@ -30,7 +30,7 @@ server.use("/auth", authRouter);
 server.use("/user", userRouter);
 
 //servering the index.html file
-server.get("/", (request, response) => {
+server.get("/*", (request, response) => {
   response.sendFile(path.resolve("./build/index.html"));
 });
 
@@ -57,24 +57,33 @@ const wss = new WebSocket.Server({ noServer: true });
 
 wss.on("connection", (ws) => {
   console.log("new connection");
-  ws.on("message", (packet) => {
-    wss.clients.forEach(async (client) => {
-      if (client.readyState !== WebSocket.OPEN) return;
-      let parsedPacket = JSON.parse(packet);
-      if (parsedPacket.type === "message") {
-        parsedPacket.data.sentDate = new Date();
-        try {
-          await Message.create(parsedPacket.data);
-        } catch (e) {
-          // handle errors
-          console.log(e);
-        } finally {
-          console.log(parsedPacket);
-          return client.send(JSON.stringify(parsedPacket));
-        }
+
+  ws.on("message", async (packet) => {
+    let parsedPacket = JSON.parse(packet);
+
+    if (parsedPacket.type != "message") {
+      wss.clients.forEach((client) => client.send(packet));
+      return;
+    }
+
+    try {
+      parsedPacket.data.sentDate = new Date();
+      // saving the message to db
+      let savedMessage = await Message.create(parsedPacket.data);
+
+      //adding the message type
+      parsedPacket = JSON.stringify({ type: "message", data: savedMessage });
+
+      // sending it to all other connected users
+      function handle(client) {
+        if (client.readyState !== WebSocket.OPEN) return;
+        client.send(parsedPacket);
       }
-      client.send(packet);
-    });
+      wss.clients.forEach(handle);
+    } catch (e) {
+      // handle errors
+      console.log(e);
+    }
   });
 
   ws.on("close", () => console.log("disconnected"));
