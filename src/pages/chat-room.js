@@ -117,7 +117,7 @@ class ChatRoom extends PureComponent {
     //setting the websocket
     if (this.wsSupported && this.context.isLogedIn) {
       // this.socket = new WebSocket("ws://localhost:8080/chat-room");
-      this.socket = new WebSocket("ws://whoshared.herokuapp.com/chat-room");
+      this.socket = new WebSocket("wss://whoshared.herokuapp.com/chat-room");
       this.socket.onmessage = this.messageHandler;
     }
 
