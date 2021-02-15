@@ -2,14 +2,15 @@ import React, { PureComponent, useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
 
 import "./chat-room.scss";
-import { GridLayoutWithoutFooter } from "../components/layouts/grid-layout";
 import { userContext } from "../lib/contexts";
 import withUserAutentication from "../components/withUserAuthentication";
 
+import { GridLayoutWithoutFooter } from "../components/layouts/grid-layout";
 import { ChatBoxMemo } from "../components/chat-room/chat-box";
 import { ChatHeaderMemo } from "../components/chat-room/chat-header";
 import { TypingUsers } from "../components/chat-room/typing-users";
 import { ChatRoomInputs } from "../components/chat-room/inputs";
+import { FabButton } from "../components/buttons";
 
 class ChatRoom extends PureComponent {
   constructor(props) {
@@ -109,6 +110,9 @@ class ChatRoom extends PureComponent {
       typingUsersVisibility: !typingUsersVisibility,
     }));
   }
+  scrollToTop() {
+    window.scroll({ top: 0, left: 0, behavior: "smooth" });
+  }
 
   componentDidMount() {
     //setting the username
@@ -122,6 +126,7 @@ class ChatRoom extends PureComponent {
     }
 
     //fetching the today messages
+    this.setState({ chatBoxLoading: true });
     fetch("/user/today-messages")
       .then((res) => res.json())
       .then((messages) =>
@@ -136,13 +141,35 @@ class ChatRoom extends PureComponent {
           messages: [],
         })
       );
+
+    //adding the event to display the fab when scroll
+    window.addEventListener("scroll", () => {
+      let fab = document.querySelector(".bottom-fab");
+      let u = document.querySelector(".chat-room__typing-user ul");
+
+      //if ul is present toggle the positions
+      if (u && window.scrollY > 200) {
+        u.classList.add("fixed");
+        u.classList.remove("static");
+        // u.style.position = "fixed";
+      } else if (u) {
+        u.classList.add("static");
+        u.classList.remove("fixed");
+      }
+
+      //if fab is present toggle the positions
+      if (fab && window.scrollY > 300) {
+        fab.style.display = "inline-block";
+      } else if (fab) {
+        fab.style.display = "none";
+      }
+    });
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.messages.length !== this.state.messages.length) {
       //to move the focus to the last sent message
-      let u = document.querySelector(".grid-layout--without-footer");
-      u.scroll(0, window.innerHeight * 100);
+      window.scroll(0, document.documentElement.scrollHeight);
     }
   }
 
@@ -188,6 +215,9 @@ class ChatRoom extends PureComponent {
                 className="chat-room__msgs"
               />
             </div>
+            <FabButton className="bottom-fab" onClick={this.scrollToTop}>
+              &#10132;
+            </FabButton>
             <div className="chat-room__inputs-container">
               {new Date().toLocaleDateString() ===
               this.state.currentMessagesDate ? (

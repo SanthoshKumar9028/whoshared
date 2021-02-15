@@ -10,14 +10,14 @@ export function GuestMenu() {
       <nav className="nav">
         <ul className="nav__list">
           <li className="nav__item">
-            <a href="/" className="nav__link">
+            <Link to="/" className="nav__link">
               home
-            </a>
+            </Link>
           </li>
           <li className="nav__item">
-            <a href="/login" className="nav__link nav__link--login">
+            <Link to="/login" className="nav__link nav__link--login">
               log in
-            </a>
+            </Link>
           </li>
         </ul>
       </nav>

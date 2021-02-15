@@ -1,0 +1,11 @@
+@import "../styles/buttons";
+
+.fab-button--default {
+  transform: translateY(-50%) rotate(-90deg);
+  opacity: 0.85;
+  top: 50%;
+  display: none;
+  span {
+    line-height: 0;
+  }
+}

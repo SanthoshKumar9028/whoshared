@@ -1,0 +1,29 @@
+.fab-button {
+  position: fixed;
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+  &--default {
+    width: 50px;
+    height: 50px;
+    border: none;
+    background-color: dodgerblue;
+    font-size: 2rem;
+  }
+}
+
+$values: (1em, 2em, 3em, 4em, 5em);
+
+@each $val in $values {
+  .top-#{$val} {
+    top: $val;
+  }
+  .bottom-#{$val} {
+    bottom: $val;
+  }
+  .left-#{$val} {
+    left: $val;
+  }
+  .right-#{$val} {
+    right: $val;
+  }
+}

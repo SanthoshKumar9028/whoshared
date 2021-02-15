@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 import "./header.scss";
 import { GuestMenu, UserMenu } from "./menu";
@@ -13,13 +14,13 @@ export default function Header(props) {
   return (
     <header className={className} {...rest}>
       <div className="header__content">
-        <a href="/">
+        <Link to="/">
           <img
             className="header__logo"
             src="/images/android-chrome-512x512.png"
             alt="who shared application logo"
           />
-        </a>
+        </Link>
         {guestmenu || !isUser ? <GuestMenu /> : <UserMenu />}
       </div>
     </header>

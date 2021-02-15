@@ -122,7 +122,6 @@
     z-index: 1;
     ul {
       padding: 0 2em 1em;
-      position: sticky;
       top: 1em;
     }
     li {
@@ -224,6 +223,13 @@
       padding-top: 2rem;
       background-color: #333;
       min-height: auto;
+      ul.fixed,
+      ul {
+        position: fixed;
+      }
+      ul.static {
+        position: static;
+      }
     }
     .toggle-btn {
       button {
