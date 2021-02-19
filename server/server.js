@@ -6,6 +6,7 @@ import WebSocket from "ws";
 
 import authRouter from "./routers/auth";
 import userRouter from "./routers/user";
+import adminRouter from "./routers/admin";
 import { authenticateUserForWS } from "./middlewares/authenticateUser";
 import Message from "./models/message";
 
@@ -28,6 +29,7 @@ server.use((req, res, next) => {
 //routers
 server.use("/auth", authRouter);
 server.use("/user", userRouter);
+server.use("/admin", adminRouter);
 
 //servering the index.html file
 server.get("/*", (request, response) => {

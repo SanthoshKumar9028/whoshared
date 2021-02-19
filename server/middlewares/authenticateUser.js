@@ -1,5 +1,7 @@
 import jwt from "jsonwebtoken";
 
+import BlockedUser from "../models/blocked-user";
+
 export function blockUnauthorizedUser(req, res, next) {
   // console.log(req._user_);
   if (req._user_) return next();
@@ -17,6 +19,26 @@ export function authenticateUserForWS(request, next = () => {}) {
       next(err, decodedData);
     });
   } else next(null);
+}
+
+export async function verifyBlockedUser(request, response, next) {
+  if (request._user_ == null) {
+    next();
+    return;
+  }
+  request._user_.isBlockedUser = true;
+  try {
+    const user = await BlockedUser.findOne({
+      username: request._user_.username,
+    });
+    // console.log(user);
+    if (!user) {
+      request._user_.isBlockedUser = false;
+    }
+  } catch (e) {
+    console.log(e);
+  }
+  next();
 }
 
 export default function (req, res, next) {

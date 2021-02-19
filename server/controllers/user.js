@@ -114,7 +114,7 @@ export const post_report_user = async (req, res) => {
 
 export const get_user_info = async (req, res) => {
   // console.log(req._user_);
-  if (req._user_) {
+  if (req._user_ && req._user_.isBlockedUser === false) {
     const user = await User.findOne(
       { username: req._user_.username },
       { password: 0 }
@@ -186,4 +186,24 @@ export const get_messages_on = async (req, res) => {
 export const get_today_messages = async (req, res) => {
   req.query.date = Date.now();
   get_messages_on(req, res);
+};
+
+export const delete_warning = async (req, res) => {
+  const { warning_id } = req.params;
+  try {
+    //changing the logined in state
+    const result = await User.updateOne(
+      { _id: req._user_.id },
+      { $pull: { warnings: { _id: { $eq: warning_id } } } }
+    );
+
+    // console.log(result);
+    if (result.n > 0) return res.json({ ok: true });
+    res.status(400);
+  } catch (e) {
+    console.log(e);
+    if (e.message.includes("Cast to ObjectId failed")) res.status(400);
+    else res.status(500);
+  }
+  res.send({ ok: false });
 };

@@ -8,6 +8,10 @@ const reportSchema = new mongoose.Schema({
   reasons: Array,
 });
 
+const warningSchema = new mongoose.Schema({
+  body: String,
+});
+
 const userSchema = new mongoose.Schema({
   originalname: {
     type: String,
@@ -30,7 +34,9 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  isAdmin: Boolean,
   reports: [reportSchema],
+  warnings: [warningSchema],
 });
 
 //middlewares
