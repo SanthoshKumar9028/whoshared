@@ -37,6 +37,7 @@ export const post_update_username = async (req, res) => {
     res.cookie("jwt", createToken({ id: user._id, username }), {
       httpOnly: true,
       maxAge: maxAge * 1000,
+      secure: true,
     });
     res.json({ user });
     // console.log(user);
@@ -73,6 +74,7 @@ export const post_update_password = async (req, res) => {
     res.cookie("jwt", createToken({ id: user._id, username: user.username }), {
       httpOnly: true,
       maxAge: maxAge * 1000,
+      secure: true,
     });
     res.json({ user });
   } catch (e) {
@@ -124,6 +126,18 @@ export const get_user_info = async (req, res) => {
     res.json({ user: null });
   }
 };
+
+export const get_user_info_by = async (req, res) => {
+  // console.log(req.query);
+  if (req._user_) {
+    const filter = { [req.query.type]: req.query.value };
+    const user = await User.findOne(filter, { password: 0 });
+    res.json({ user });
+  } else {
+    res.json({ user: null });
+  }
+};
+
 export const get_users_info = async (req, res) => {
   try {
     const users = await User.find({}, { password: 0 });

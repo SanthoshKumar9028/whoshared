@@ -103,3 +103,200 @@ export function ReportDialog(props) {
     </div>
   );
 }
+
+const RemovePermentaly = React.memo(function ({ id, username }) {
+  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState("");
+
+  const handle = async function () {
+    setLoading(true);
+    try {
+      const res = await fetch(`/admin/remove-user/${id}`, { method: "DELETE" });
+      if (res.ok) {
+        setStatus("Status: User removed sucessfully");
+      } else if (res.status === 400) {
+        setStatus("Status: User Not found");
+      } else {
+        throw new Error("server error");
+      }
+    } catch (e) {
+      if (e.message === "server error")
+        setStatus("Status: Someting went wrong");
+      else throw e;
+    } finally {
+      setLoading(false);
+    }
+  };
+  return (
+    <details className="take-action-dialog__action">
+      <summary className="take-action-dialog__action-title">
+        Remove {username} Permentaly
+      </summary>
+      <button
+        onClick={handle}
+        className={`take-action-dialog__action-btn ${
+          loading ? "ring-loader ring-loader--x-small" : ""
+        }`}
+      >
+        Remove Permentaly
+      </button>
+      <p className="take-action-dialog__action-status">{status}</p>
+    </details>
+  );
+});
+
+const BlockTemproverly = React.memo(function ({ id, username }) {
+  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState("");
+
+  const handle = async function () {
+    setLoading(true);
+    try {
+      const res = await fetch("/admin/block-user-by", {
+        method: "post",
+        body: JSON.stringify({ type: "_id", value: id }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (res.ok) {
+        setStatus("Status: User blocked sucessfully");
+      } else if (res.status === 400) {
+        setStatus("Status: User Not found");
+      } else {
+        throw new Error("server error");
+      }
+    } catch (e) {
+      if (e.message === "server error")
+        setStatus("Status: Someting went wrong");
+      else throw e;
+    } finally {
+      setLoading(false);
+    }
+  };
+  return (
+    <details className="take-action-dialog__action">
+      <summary className="take-action-dialog__action-title">
+        Block {username} Temproverly
+      </summary>
+      <button
+        onClick={handle}
+        className={`take-action-dialog__action-btn ${
+          loading ? "ring-loader ring-loader--x-small" : ""
+        }`}
+      >
+        Block Temproverly
+      </button>
+      <p className="take-action-dialog__action-status">{status}</p>
+    </details>
+  );
+});
+
+const SendNotification = React.memo(function ({ id, username }) {
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const [status, setStatus] = useState({
+    className: "take-action-dialog__action-status",
+    message: "",
+  });
+
+  const handle = async function () {
+    setLoading(true);
+    const status = {
+      className: "take-action-dialog__action-status",
+      message: "",
+    };
+    try {
+      const res = await fetch("/admin/send-warning", {
+        method: "post",
+        body: JSON.stringify({ userId: id, message }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (res.ok) {
+        status.className += " take-action-dialog__action-status--ok";
+        status.message = "Status: Message sent sucessfully";
+      } else if (res.status === 400) {
+        status.className += " take-action-dialog__action-status--wrong";
+        status.message = "Status: User Not found";
+        setStatus("Status: User Not found");
+      } else {
+        throw new Error("server error");
+      }
+      setMessage("");
+    } catch (e) {
+      if (e.message === "server error") {
+        status.className += " take-action-dialog__action-status--wrong";
+        status.message = "Status: Someting went wrong";
+      } else throw e;
+    } finally {
+      setStatus(status);
+      setLoading(false);
+    }
+  };
+
+  return (
+    <details className="take-action-dialog__action">
+      <summary className="take-action-dialog__action-title">
+        Send Warning Notification To {username}
+      </summary>
+      <textarea
+        value={message}
+        rows="5"
+        cols="30"
+        placeholder="type..."
+        onChange={(e) => setMessage(e.target.value)}
+        className="take-action-dialog__action-textarea"
+      />
+      <button
+        onClick={handle}
+        disabled={!Boolean(message)}
+        className={`take-action-dialog__action-btn ${
+          loading ? "ring-loader ring-loader--x-small" : ""
+        }`}
+      >
+        Send
+      </button>
+      <p className={status.className}>{status.message}</p>
+    </details>
+  );
+});
+
+export function TakeActionDialog(props) {
+  let [dialogStatus, setDialogStatus] = useState("");
+
+  let {
+    className = "",
+    visible,
+    id,
+    username,
+    close = () => {},
+    ...rest
+  } = props;
+  className += " take-action-dialog";
+
+  if (visible === false) return null;
+
+  return (
+    <div className="dialog-container dialog-container--white">
+      <h2 className="dialog-container__status">{dialogStatus}</h2>
+      <div className={className} {...rest}>
+        <div className="take-action-dialog__header">
+          <h2 className="take-action-dialog__title">
+            Take Action On {username}
+          </h2>
+          <button className="take-action-dialog__close-btn" onClick={close}>
+            X
+          </button>
+        </div>
+        <div className="take-action-dialog__inputs">
+          <RemovePermentaly id={id} username={username} />
+          <BlockTemproverly id={id} username={username} />
+          <SendNotification id={id} username={username} />
+        </div>
+      </div>
+    </div>
+  );
+}

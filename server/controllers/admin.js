@@ -35,34 +35,39 @@ export const get_all_reports = async (req, res) => {
   }
 };
 
-export const post_block_user = async (req, res) => {
-  const { username } = req.body;
+export const post_block_user_by = async (req, res) => {
+  const { type, value } = req.body;
+  const filter = { [type]: value };
   try {
-    let user = await User.find({ username }, { username: 1 });
-    if (!user) {
+    let user = await User.find(filter, { username: 1 });
+    // console.log(user);
+    if (user == null || user.length < 1) {
       res.status(400);
-      throw new Error("user not found");
+      throw new Error("not found");
     }
-    //to blocking the user
-    user = { userId: user[0]._id, username };
+    //blocking the user by inserting into the blockedusers collection
+    user = { userId: user[0]._id, username: user[0].username };
     await BlockedUser.create(user);
-
     res.json({ ok: true });
+    return;
   } catch (e) {
-    res.json({ ok: false });
+    console.log(e);
+    if (e.message.includes("Cast to ObjectId failed")) res.status(400);
+    else if (e.message.includes("not found") === false) res.status(500);
   }
+  res.json({ ok: false });
 };
 
 export const post_send_warning = async (req, res) => {
-  const { userid, message } = req.body;
+  const { userId, message } = req.body;
   try {
     //changing the logined in state
     const result = await User.updateOne(
-      { _id: userid },
+      { _id: userId },
       { $push: { warnings: { body: message } } }
     );
 
-    console.log(result);
+    // console.log(result);
     if (result.n > 0) return res.json({ ok: true });
     res.status(400);
   } catch (e) {
@@ -74,11 +79,11 @@ export const post_send_warning = async (req, res) => {
 };
 
 export const delete_reports = async (req, res) => {
-  const { userid } = req.params;
+  const { userId } = req.params;
 
   try {
     const result = await User.updateOne(
-      { _id: userid },
+      { _id: userId },
       { $set: { reports: [] } }
     );
     // console.log(result);
@@ -94,7 +99,7 @@ export const delete_reports = async (req, res) => {
 
 export const delete_remove_user = async (req, res) => {
   try {
-    const result = await User.deleteOne({ _id: req.params.userid });
+    const result = await User.deleteOne({ _id: req.params.userId });
     // console.log(result);
     if (result.n > 0) {
       res.json({ ok: true });

@@ -24,6 +24,7 @@ export async function post_add_user(req, res) {
     res.cookie("jwt", createToken({ id: user._id, username, isAdmin }), {
       httpOnly: true,
       maxAge: maxAge * 1000,
+      secure: true,
     });
     res.status(201);
     res.json({ user });
@@ -56,6 +57,7 @@ export async function post_login_user(req, res) {
     res.cookie("jwt", createToken({ id: user._id, username }), {
       httpOnly: true,
       maxAge: maxAge * 1000,
+      secure: true,
     });
     res.status(200);
     res.json({ user });

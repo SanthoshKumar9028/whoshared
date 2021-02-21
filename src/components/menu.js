@@ -27,7 +27,7 @@ export function GuestMenu() {
 
 export function UserMenu(props) {
   const [open, setOpen] = useState(false);
-  const { logout, imgUrl, username } = useContext(userContext);
+  const { logout, imgUrl, username, isAdmin } = useContext(userContext);
   const { style, ...rest } = props;
 
   const close = useCallback(() => {
@@ -76,6 +76,15 @@ export function UserMenu(props) {
                 friends
               </Link>
             </li>
+
+            {isAdmin ? (
+              <li className="nav__item">
+                <Link to="/reports" className="nav__link">
+                  reports
+                </Link>
+              </li>
+            ) : null}
+
             <li className="nav__item">
               <a
                 href="/log-out"

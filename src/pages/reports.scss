@@ -1,0 +1,52 @@
+@import "../styles/partials";
+
+.reports {
+  align-self: start;
+  &__content {
+    @extend %container;
+  }
+  .report {
+    max-width: 500px;
+    background-color: #333;
+    color: white;
+    padding: 1em;
+    border-radius: 10px;
+    margin-bottom: 1.5em;
+    box-shadow: 0 5px 15px rgba(black, 0.4);
+    &__header {
+      display: flex;
+      align-items: center;
+    }
+    &__username {
+      margin: 0;
+      margin-left: 15px;
+    }
+    &__close-btn {
+      margin-left: auto;
+      color: red;
+      font-weight: bold;
+      background-color: white;
+      border: none;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    &__profile-img {
+      width: 40px;
+      background-color: white;
+      border-radius: 50%;
+    }
+    &__take-action-btn {
+      display: block;
+      margin-left: auto;
+      border: none;
+      padding: 0.5em 1em;
+      text-transform: uppercase;
+      font-size: 1.01rem;
+      background-color: orange;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+  }
+}

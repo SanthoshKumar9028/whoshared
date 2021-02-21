@@ -13,6 +13,9 @@
     text-align: center;
     color: white;
   }
+  &--white {
+    background-color: white;
+  }
 }
 
 .report-dialog {
@@ -78,8 +81,96 @@
   }
 }
 
+.take-action-dialog {
+  width: 90%;
+  margin: auto;
+  max-width: 500px;
+  background-color: #333;
+  color: white;
+  padding: 1em;
+  box-sizing: border-box;
+  border-radius: 5px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  &__close-btn {
+    border: none;
+    width: 40px;
+    height: 40px;
+    position: relative;
+    color: transparent;
+    background-color: transparent;
+    z-index: 1;
+    cursor: pointer;
+    &::after {
+      content: "X";
+      line-height: 40px;
+      position: absolute;
+      color: red;
+      top: 0;
+      left: 0;
+      font-size: 1.2rem;
+      font-weight: bold;
+      background-color: white;
+      width: 40px;
+      height: 40px;
+      z-index: -1;
+      border-radius: 50%;
+      &:hover,
+      &:focus {
+        background-color: gray;
+      }
+    }
+  }
+  &__action {
+    margin: 0.5em 0;
+  }
+  &__action-title::selection {
+    background-color: transparent;
+  }
+  &__action-btn {
+    display: inline-block;
+    margin: 1em 0;
+    padding: 0.5em 1em;
+    background-color: crimson;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    &:hover,
+    &:focus,
+    &:disabled {
+      background-color: lighten(crimson, 10%);
+    }
+  }
+  &__action-textarea {
+    display: block;
+    margin-top: 1em;
+    resize: vertical;
+  }
+  &__action-status {
+    margin: 0;
+    &--ok {
+      color: lightgreen;
+    }
+    &--wrong {
+      color: lightcoral;
+    }
+  }
+}
+
 @media screen and (min-width: 600px) {
-  .report-dialog {
+  .report-dialog,
+  .take-action-dialog {
     font-size: 1.1rem;
+  }
+  .take-action-dialog {
+    padding: 2em;
   }
 }

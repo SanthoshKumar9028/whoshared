@@ -76,6 +76,10 @@ export default function Login({ setUser }) {
               value={password}
               onChange={updatePassword}
             />
+            <p className="login__error login__error--password">
+              {validationErrors.password}
+            </p>
+
             <label className="login__toggle-password">
               <input
                 type="checkbox"
@@ -83,9 +87,6 @@ export default function Login({ setUser }) {
               />
               {showPassword ? "Hide" : "Show"} passsword
             </label>
-            <p className="login__error login__error--password">
-              {validationErrors.password}
-            </p>
 
             <button
               id="but"
