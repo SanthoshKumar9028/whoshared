@@ -86,9 +86,14 @@ class ChatRoom extends PureComponent {
   handleDatePicker(e) {
     const toFetchDate = new Date(e.target.value);
     if (toFetchDate === "Invalid Date") return;
-    let dateStr = toFetchDate.toLocaleDateString();
+    // let dateStr = toFetchDate.toLocaleDateString();
 
-    let [month, date, year] = dateStr.split("/");
+    let month = String(toFetchDate.getMonth() + 1);
+    let date = String(toFetchDate.getDate());
+    let year = String(toFetchDate.getFullYear());
+
+    month = month.padStart(2, "0");
+    date = date.padStart(2, "0");
 
     const url = `user/messages-on?date=${year}-${month}-${date}`;
     this.setState({
@@ -120,8 +125,8 @@ class ChatRoom extends PureComponent {
 
     //setting the websocket
     if (this.wsSupported && this.context.isLogedIn) {
-      // this.socket = new WebSocket("ws://localhost:8080/chat-room");
-      this.socket = new WebSocket("wss://whoshared.herokuapp.com/chat-room");
+      this.socket = new WebSocket("ws://localhost:8080/chat-room");
+      // this.socket = new WebSocket("wss://whoshared.herokuapp.com/chat-room");
       this.socket.onmessage = this.messageHandler;
     }
 
@@ -143,6 +148,15 @@ class ChatRoom extends PureComponent {
       );
 
     //adding the event to display the fab when scroll
+
+    setTimeout(() => {
+      let u = document.querySelector(".chat-room__typing-user ul");
+      if (u && window.pageYOffset > 200) {
+        u.classList.add("fixed");
+        u.classList.remove("static");
+      }
+    }, 500);
+
     window.addEventListener("scroll", () => {
       let fab = document.querySelector(".bottom-fab");
       let u = document.querySelector(".chat-room__typing-user ul");
@@ -151,7 +165,6 @@ class ChatRoom extends PureComponent {
       if (u && window.scrollY > 200) {
         u.classList.add("fixed");
         u.classList.remove("static");
-        // u.style.position = "fixed";
       } else if (u) {
         u.classList.add("static");
         u.classList.remove("fixed");

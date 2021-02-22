@@ -182,6 +182,7 @@ export const get_messages_on = async (req, res) => {
   const curDate = new Date(year, month, date, 0, 0, 0);
   const nextDate = new Date(year, month, date + 1, 0, 0, 0);
 
+  console.log(curDate, " == ", nextDate);
   try {
     const messages = await Message.find({
       $and: [{ sentDate: { $gte: curDate } }, { sentDate: { $lt: nextDate } }],
