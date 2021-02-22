@@ -106,24 +106,44 @@ export function ReportDialog(props) {
 
 const RemovePermentaly = React.memo(function ({ id, username }) {
   const [loading, setLoading] = useState(false);
-  const [status, setStatus] = useState("");
+  const [status, setStatus] = useState({
+    className: "",
+    message: "",
+  });
 
   const handle = async function () {
+    const input = prompt(`Type "${username}" to remove permentaly.`);
+    if (input !== username) {
+      setStatus({
+        className: "take-action-dialog__action-status--wrong",
+        message: "Incurrect username",
+      });
+      return;
+    }
+
     setLoading(true);
+    const status = {
+      className: "",
+      message: "",
+    };
     try {
       const res = await fetch(`/admin/remove-user/${id}`, { method: "DELETE" });
       if (res.ok) {
-        setStatus("Status: User removed sucessfully");
+        status.className = "take-action-dialog__action-status--ok";
+        status.message = "Status: User removed sucessfully";
       } else if (res.status === 400) {
-        setStatus("Status: User Not found");
+        status.className = "take-action-dialog__action-status--wrong";
+        status.message = "Status: User Not found";
       } else {
         throw new Error("server error");
       }
     } catch (e) {
-      if (e.message === "server error")
-        setStatus("Status: Someting went wrong");
-      else throw e;
+      if (e.message === "server error") {
+        status.className = "take-action-dialog__action-status--wrong";
+        status.message = "Status: Someting went wrong";
+      } else throw e;
     } finally {
+      setStatus(status);
       setLoading(false);
     }
   };
@@ -140,17 +160,26 @@ const RemovePermentaly = React.memo(function ({ id, username }) {
       >
         Remove Permentaly
       </button>
-      <p className="take-action-dialog__action-status">{status}</p>
+      <p className={`take-action-dialog__action-status ${status.className}`}>
+        {status.message}
+      </p>
     </details>
   );
 });
 
 const BlockTemproverly = React.memo(function ({ id, username }) {
   const [loading, setLoading] = useState(false);
-  const [status, setStatus] = useState("");
+  const [status, setStatus] = useState({
+    className: "",
+    message: "",
+  });
 
   const handle = async function () {
     setLoading(true);
+    const status = {
+      className: "",
+      message: "",
+    };
     try {
       const res = await fetch("/admin/block-user-by", {
         method: "post",
@@ -160,17 +189,21 @@ const BlockTemproverly = React.memo(function ({ id, username }) {
         },
       });
       if (res.ok) {
-        setStatus("Status: User blocked sucessfully");
+        status.className = "take-action-dialog__action-status--ok";
+        status.message = "Status: User blocked sucessfully";
       } else if (res.status === 400) {
-        setStatus("Status: User Not found");
+        status.className = "take-action-dialog__action-status--wrong";
+        status.message = "Status: User Not found";
       } else {
         throw new Error("server error");
       }
     } catch (e) {
-      if (e.message === "server error")
-        setStatus("Status: Someting went wrong");
-      else throw e;
+      if (e.message === "server error") {
+        status.className = "take-action-dialog__action-status--wrong";
+        status.message = "Status: Someting went wrong";
+      } else throw e;
     } finally {
+      setStatus(status);
       setLoading(false);
     }
   };
@@ -187,7 +220,9 @@ const BlockTemproverly = React.memo(function ({ id, username }) {
       >
         Block Temproverly
       </button>
-      <p className="take-action-dialog__action-status">{status}</p>
+      <p className={`take-action-dialog__action-status ${status.className}`}>
+        {status.message}
+      </p>
     </details>
   );
 });
@@ -196,14 +231,14 @@ const SendNotification = React.memo(function ({ id, username }) {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState({
-    className: "take-action-dialog__action-status",
+    className: "",
     message: "",
   });
 
   const handle = async function () {
     setLoading(true);
     const status = {
-      className: "take-action-dialog__action-status",
+      className: "",
       message: "",
     };
     try {
@@ -216,19 +251,18 @@ const SendNotification = React.memo(function ({ id, username }) {
       });
 
       if (res.ok) {
-        status.className += " take-action-dialog__action-status--ok";
+        status.className = "take-action-dialog__action-status--ok";
         status.message = "Status: Message sent sucessfully";
       } else if (res.status === 400) {
-        status.className += " take-action-dialog__action-status--wrong";
+        status.className = "take-action-dialog__action-status--wrong";
         status.message = "Status: User Not found";
-        setStatus("Status: User Not found");
       } else {
         throw new Error("server error");
       }
       setMessage("");
     } catch (e) {
       if (e.message === "server error") {
-        status.className += " take-action-dialog__action-status--wrong";
+        status.className = "take-action-dialog__action-status--wrong";
         status.message = "Status: Someting went wrong";
       } else throw e;
     } finally {
@@ -259,14 +293,14 @@ const SendNotification = React.memo(function ({ id, username }) {
       >
         Send
       </button>
-      <p className={status.className}>{status.message}</p>
+      <p className={`take-action-dialog__action-status ${status.className}`}>
+        {status.message}
+      </p>
     </details>
   );
 });
 
 export function TakeActionDialog(props) {
-  let [dialogStatus, setDialogStatus] = useState("");
-
   let {
     className = "",
     visible,
@@ -281,7 +315,6 @@ export function TakeActionDialog(props) {
 
   return (
     <div className="dialog-container dialog-container--white">
-      <h2 className="dialog-container__status">{dialogStatus}</h2>
       <div className={className} {...rest}>
         <div className="take-action-dialog__header">
           <h2 className="take-action-dialog__title">

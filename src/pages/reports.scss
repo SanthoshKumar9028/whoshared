@@ -37,16 +37,30 @@
       background-color: white;
       border-radius: 50%;
     }
+    &__btn-container {
+      display: flex;
+      justify-content: space-between;
+    }
+    &__delete-report-btn,
     &__take-action-btn {
-      display: block;
-      margin-left: auto;
       border: none;
       padding: 0.5em 1em;
       text-transform: uppercase;
       font-size: 1.01rem;
-      background-color: orange;
       border-radius: 10px;
       cursor: pointer;
+      &:hover,
+      &:focus {
+        opacity: 0.8;
+      }
+    }
+    &__delete-report-btn {
+      background-color: crimson;
+      color: white;
+    }
+    &__take-action-btn {
+      margin-left: auto;
+      background-color: orange;
     }
   }
 }

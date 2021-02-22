@@ -76,6 +76,8 @@ const ReportContainer = function (props) {
     }
   };
 
+  const handleCloseReport = () => removeRequestById(_id);
+
   return (
     <section className={`${className} report`} {...rest}>
       <div className="report__header">
@@ -85,7 +87,7 @@ const ReportContainer = function (props) {
           className="report__profile-img"
         />
         <h2 className="report__username">{userInfo.username}</h2>
-        <button className="report__close-btn" onClick={handleDeleteReport}>
+        <button className="report__close-btn" onClick={handleCloseReport}>
           X
         </button>
       </div>
@@ -96,7 +98,13 @@ const ReportContainer = function (props) {
           reasons={report.reasons}
         />
       ))}
-      <div>
+      <div className="report__btn-container">
+        <button
+          className="report__delete-report-btn"
+          onClick={handleDeleteReport}
+        >
+          delete
+        </button>
         <button
           className="report__take-action-btn"
           onClick={() =>
