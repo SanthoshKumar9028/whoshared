@@ -67,7 +67,7 @@ export const post_update_password = async (req, res) => {
     const hashedPassword = await hashPassword(password);
     await User.updateOne(
       { username: user.username },
-      { $set: { hashedPassword } }
+      { $set: { password: hashedPassword } }
     );
     // console.log(user);
     res.status(201);
