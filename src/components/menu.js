@@ -33,21 +33,18 @@ export function UserMenu(props) {
   const close = useCallback(() => {
     setOpen((prv) => !prv);
   }, []);
-  const keyhandler = useCallback((e) => {
-    if (e.keyCode === 13) {
-      setOpen((prv) => !prv);
-    }
-  }, []);
 
   return (
     <section className="user-menu" style={style} {...rest}>
       <div className="user-menu__name">{username}</div>
-      <div
+      <button
+        className="user-menu__hamburger-btn"
         onClick={close}
-        onKeyUp={keyhandler}
-        tabIndex="0"
         aria-label="open navigaiton"
       >
+        &#8285;&#8285;&#8285;
+      </button>
+      <div>
         <summary>
           {imgUrl ? (
             <img className="profile-img" src={imgUrl} alt="user profile" />
@@ -74,6 +71,11 @@ export function UserMenu(props) {
             <li className="nav__item">
               <Link to="/friends" className="nav__link">
                 friends
+              </Link>
+            </li>
+            <li className="nav__item">
+              <Link to="/notifications" className="nav__link">
+                notifications
               </Link>
             </li>
 

@@ -8,6 +8,8 @@ import Profile from "./pages/profile";
 import ChatRoom from "./pages/chat-room";
 import FriendsList from "./pages/friends-list";
 import Reports from "./pages/reports";
+import Notifications from "./pages/notifications";
+import PageNotFound from "./pages/page-not-found";
 import LoadingIndicator from "./components/loading-indicator";
 import { userContext } from "./lib/contexts";
 import { assignUserProps } from "./lib/assignProps";
@@ -61,6 +63,9 @@ function App() {
           <Route path="/login">
             <Login setUser={setUser} />
           </Route>
+          <Route path="/notifications">
+            <Notifications />
+          </Route>
 
           {user && user.isAdmin ? (
             <Route path="/reports">
@@ -68,7 +73,7 @@ function App() {
             </Route>
           ) : null}
           <Route>
-            <h1>404</h1>
+            <PageNotFound />
           </Route>
         </Switch>
       </userContext.Provider>

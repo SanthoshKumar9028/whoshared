@@ -8,7 +8,8 @@ const reportSchema = new mongoose.Schema({
   reasons: Array,
 });
 
-const warningSchema = new mongoose.Schema({
+const notificationSchema = new mongoose.Schema({
+  type: String,
   body: String,
 });
 
@@ -36,7 +37,7 @@ const userSchema = new mongoose.Schema({
   },
   isAdmin: Boolean,
   reports: [reportSchema],
-  warnings: [warningSchema],
+  notifications: [notificationSchema],
 });
 
 //middlewares

@@ -1,0 +1,75 @@
+@import "../styles/partials";
+
+.notifications {
+  @extend %container;
+  &__content {
+    margin-bottom: 2em;
+    max-width: 600px;
+    min-height: 300px;
+  }
+  &__notification {
+    color: white;
+    padding: 0.3em;
+    background-color: #333;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+    border-left-width: 5px;
+    border-left-style: solid;
+    position: relative;
+    overflow: hidden;
+    & + & {
+      margin-top: 1.5em;
+    }
+    h2,
+    p {
+      margin: 0.2em;
+    }
+    .symbol {
+      display: flex;
+      justify-content: space-between;
+    }
+    .close-btn {
+      color: red;
+      font-weight: bolder;
+      border: none;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      transition: background-color 300ms;
+      cursor: pointer;
+      &:hover,
+      &:focus {
+        background-color: lightgray;
+      }
+    }
+    &::before {
+      content: "";
+      position: absolute;
+      top: -10px;
+      left: -10px;
+      width: 20px;
+      height: 20px;
+      transform: rotate(40deg) scaleY(1.1);
+    }
+
+    &--warning {
+      border-left-color: rgb(255, 193, 79);
+      .symbol {
+        color: rgb(255, 193, 79);
+      }
+      &::before {
+        background-color: rgb(255, 193, 79);
+      }
+    }
+    &--general {
+      border-left-color: dodgerblue;
+      .symbol {
+        color: dodgerblue;
+      }
+      &::before {
+        background-color: dodgerblue;
+      }
+    }
+  }
+}

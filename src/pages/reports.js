@@ -4,6 +4,7 @@ import "./reports.scss";
 import GridLayout from "../components/layouts/grid-layout";
 import withUserAutentication from "../components/withUserAuthentication";
 import { TakeActionDialog } from "../components/dialogs";
+import { useUserAuth } from "../lib/hooks";
 
 function Reasons({ username, reasons, ...rest }) {
   return (
@@ -22,6 +23,8 @@ const ReportContainer = function (props) {
   const [userInfo, setUserInfo] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+
+  const { user } = useUserAuth();
 
   let {
     _id,
@@ -105,14 +108,16 @@ const ReportContainer = function (props) {
         >
           delete
         </button>
-        <button
-          className="report__take-action-btn"
-          onClick={() =>
-            takeAction({ id: userInfo._id, username: userInfo.username })
-          }
-        >
-          take action
-        </button>
+        {userInfo.username === user.username ? null : (
+          <button
+            className="report__take-action-btn"
+            onClick={() =>
+              takeAction({ id: userInfo._id, username: userInfo.username })
+            }
+          >
+            take action
+          </button>
+        )}
       </div>
     </section>
   );

@@ -15,7 +15,8 @@ import {
   post_update_username,
   post_update_password,
   post_report_user,
-  delete_warning,
+  get_notifications,
+  delete_notification,
 } from "../controllers/user";
 
 const router = Router();
@@ -31,12 +32,18 @@ router.get("/user-states", authUser, blockUnauthorizedUser, get_user_states);
 router.get("/remove-user", authUser, blockUnauthorizedUser, get_remove_user);
 router.get("/messages-on", get_messages_on);
 router.get("/today-messages", get_today_messages);
-
-router.delete(
-  "/warning/:warning_id",
+router.get(
+  "/notifications",
   authUser,
   blockUnauthorizedUser,
-  delete_warning
+  get_notifications
+);
+
+router.delete(
+  "/notification/:notificationId",
+  authUser,
+  blockUnauthorizedUser,
+  delete_notification
 );
 
 export default router;

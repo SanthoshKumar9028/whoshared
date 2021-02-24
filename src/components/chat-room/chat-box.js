@@ -28,7 +28,7 @@ export function ChatBox(props) {
   if (messages.length === 0)
     return (
       <section className={className} {...rest}>
-        <h2 style={{ textAlign: "center" }}>Empty...</h2>
+        <h2 style={{ textAlign: "center" }}>empty...</h2>
       </section>
     );
 

@@ -242,9 +242,9 @@ const SendNotification = React.memo(function ({ id, username }) {
       message: "",
     };
     try {
-      const res = await fetch("/admin/send-warning", {
+      const res = await fetch("/admin/send-notification", {
         method: "post",
-        body: JSON.stringify({ userId: id, message }),
+        body: JSON.stringify({ type: "warning", userId: id, message }),
         headers: {
           "Content-Type": "application/json",
         },

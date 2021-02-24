@@ -6,7 +6,7 @@ import authUser, {
 import {
   get_reports,
   get_all_reports,
-  post_send_warning,
+  post_send_notification,
   post_block_user_by,
   delete_reports,
   delete_remove_user,
@@ -24,10 +24,10 @@ router.post(
   post_block_user_by
 );
 router.post(
-  "/send-warning",
+  "/send-notification",
   authUser,
   blockUnauthorizedUser,
-  post_send_warning
+  post_send_notification
 );
 
 router.delete(

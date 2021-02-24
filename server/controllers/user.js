@@ -182,7 +182,6 @@ export const get_messages_on = async (req, res) => {
   const curDate = new Date(year, month, date, 0, 0, 0);
   const nextDate = new Date(year, month, date + 1, 0, 0, 0);
 
-  console.log(curDate, " == ", nextDate);
   try {
     const messages = await Message.find({
       $and: [{ sentDate: { $gte: curDate } }, { sentDate: { $lt: nextDate } }],
@@ -203,13 +202,29 @@ export const get_today_messages = async (req, res) => {
   get_messages_on(req, res);
 };
 
-export const delete_warning = async (req, res) => {
-  const { warning_id } = req.params;
+export const get_notifications = async (req, res) => {
+  try {
+    //changing the logined in state
+    const notifications = await User.find(
+      { _id: req._user_.id },
+      { notifications: 1 }
+    );
+    if (notifications) res.json(notifications[0]);
+    else res.json({ notifications: [] });
+  } catch (e) {
+    console.log(e);
+    res.status(500);
+    res.json({ notifications: [] });
+  }
+};
+
+export const delete_notification = async (req, res) => {
+  const { notificationId } = req.params;
   try {
     //changing the logined in state
     const result = await User.updateOne(
       { _id: req._user_.id },
-      { $pull: { warnings: { _id: { $eq: warning_id } } } }
+      { $pull: { notifications: { _id: { $eq: notificationId } } } }
     );
 
     // console.log(result);

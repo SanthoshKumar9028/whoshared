@@ -85,8 +85,7 @@ class ChatRoom extends PureComponent {
   }
   handleDatePicker(e) {
     const toFetchDate = new Date(e.target.value);
-    if (toFetchDate === "Invalid Date") return;
-    // let dateStr = toFetchDate.toLocaleDateString();
+    if (toFetchDate.toLocaleDateString() === "Invalid Date") return;
 
     let month = String(toFetchDate.getMonth() + 1);
     let date = String(toFetchDate.getDate());
@@ -125,8 +124,8 @@ class ChatRoom extends PureComponent {
 
     //setting the websocket
     if (this.wsSupported && this.context.isLogedIn) {
-      this.socket = new WebSocket("ws://localhost:8080/chat-room");
-      // this.socket = new WebSocket("wss://whoshared.herokuapp.com/chat-room");
+      // this.socket = new WebSocket("ws://localhost:8080/chat-room");
+      this.socket = new WebSocket("wss://whoshared.herokuapp.com/chat-room");
       this.socket.onmessage = this.messageHandler;
     }
 

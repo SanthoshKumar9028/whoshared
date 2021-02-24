@@ -58,13 +58,13 @@ export const post_block_user_by = async (req, res) => {
   res.json({ ok: false });
 };
 
-export const post_send_warning = async (req, res) => {
-  const { userId, message } = req.body;
+export const post_send_notification = async (req, res) => {
+  const { userId, message, type = "general" } = req.body;
   try {
     //changing the logined in state
     const result = await User.updateOne(
       { _id: userId },
-      { $push: { warnings: { body: message } } }
+      { $push: { notifications: { type, body: message } } }
     );
 
     // console.log(result);
