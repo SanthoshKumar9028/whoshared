@@ -2,21 +2,20 @@
   display: flex;
   position: relative;
   z-index: 1000;
-  &__hamburger-btn {
+  &__ninedot-btn {
     height: 36px;
     width: 36px;
     padding: 0;
-    line-height: 0;
     border: 0;
-    margin-right: 0.2em;
-    border-radius: 50%;
-    font-size: 2rem;
-    background-color: inherit;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-right: 1em;
     cursor: pointer;
-    transition: color 300ms;
+    filter: invert(10%);
+    transition: filter 300ms;
     &:hover,
     &:focus {
-      color: #333;
+      filter: invert(20%);
     }
   }
 }

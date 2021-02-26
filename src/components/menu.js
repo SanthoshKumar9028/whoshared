@@ -38,11 +38,11 @@ export function UserMenu(props) {
     <section className="user-menu" style={style} {...rest}>
       <div className="user-menu__name">{username}</div>
       <button
-        className="user-menu__hamburger-btn"
+        className="user-menu__ninedot-btn"
         onClick={close}
         aria-label="open navigaiton"
       >
-        &#8285;&#8285;&#8285;
+        <img src="/images/nine-dots-in-a-square.svg" alt="user menu" />
       </button>
       <div>
         <summary>
