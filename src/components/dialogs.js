@@ -1,4 +1,5 @@
 import React, { useRef, useState } from "react";
+import { useHistory } from "react-router-dom";
 
 import "./dialogs.scss";
 
@@ -329,6 +330,74 @@ export function TakeActionDialog(props) {
           <BlockTemproverly id={id} username={username} />
           <SendNotification id={id} username={username} />
         </div>
+      </div>
+    </div>
+  );
+}
+
+export function UploadImg(props) {
+  const { visible = false, changeUser, setVisible = () => {} } = props;
+  const [status, setStatus] = useState({ type: "", message: "" });
+  const formRef = useRef();
+  const history = useHistory();
+
+  if (visible === false) return null;
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const file = formRef.current.profileImg.files[0];
+    const s = { type: "error", message: "" };
+    if (file.type !== "image/jpeg") {
+      s.message = "Image should be JPEG format";
+      setStatus(s);
+      return;
+    }
+    if (file.size > 1024 * 1024) {
+      s.message = "Image size should be less than 1MB";
+      setStatus(s);
+      return;
+    }
+    try {
+      const res = await fetch("/user/upload-img", {
+        method: "post",
+        body: new FormData(formRef.current),
+      });
+      const data = await res.json();
+      if (data.error) {
+        s.message = "image is not uploded, try later";
+        setStatus(s);
+      } else {
+        setStatus({
+          type: "info",
+          message: "reload the page to see updated image",
+        });
+      }
+    } catch (e) {
+      s.message = "something went wrong, try later";
+      setStatus(s);
+      console.log(e);
+    }
+  };
+
+  return (
+    <div className="dialog-container">
+      <div className="upload-dialog">
+        <button
+          className="upload-dialog__close-btn"
+          onClick={() => setVisible(false)}
+        >
+          X
+        </button>
+        <p>Upload profile image less than 1MB and JPEG format</p>
+        <form ref={formRef} onSubmit={handleSubmit}>
+          <input type="file" name="profileImg" accept="image/jpeg" required />
+          <button className="upload-dialog__upload-btn">upload</button>
+        </form>
+        <p
+          className={`upload-dialog__status upload-dialog__status--${status.type}`}
+        >
+          {status.message}
+        </p>
       </div>
     </div>
   );

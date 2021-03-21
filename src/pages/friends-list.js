@@ -5,16 +5,17 @@ import GridLayout from "../components/layouts/grid-layout";
 import { useUserAuth } from "../lib/hooks";
 import { ReportDialog } from "../components/dialogs";
 import withUserAutentication from "../components/withUserAuthentication";
+import { ProfileImg } from "../components/profile-img";
 
 function UserCard(props) {
-  let { username, reportUser, className = "", ...rest } = props;
+  let { username, profileImgPath, reportUser, className = "", ...rest } = props;
   className += " user-card";
   return (
     <div className={className} {...rest}>
-      <img
+      <ProfileImg
         className="user-card__img"
-        src="/images/user_profile.png"
-        alt={`${username}`}
+        src={profileImgPath}
+        username={username}
       />
       <h2 className="user-card__username">{username}</h2>
       <button
@@ -54,7 +55,11 @@ export function FriendsList() {
         // removeing the current user
         allusers = allusers.filter((u) => u.username !== user.username);
         setUsers(
-          allusers.map((user) => ({ id: user._id, username: user.username }))
+          allusers.map((user) => ({
+            id: user._id,
+            username: user.username,
+            profileImgPath: user.profileImgPath,
+          }))
         );
       } catch (e) {
         console.log(e);
@@ -88,6 +93,7 @@ export function FriendsList() {
               <UserCard
                 key={user.id}
                 username={user.username}
+                profileImgPath={user.profileImgPath}
                 reportUser={chooseReportUser}
               />
             ))

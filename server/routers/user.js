@@ -1,4 +1,5 @@
 import { Router } from "express";
+import multer from "multer";
 
 import authUser, {
   blockUnauthorizedUser,
@@ -15,15 +16,36 @@ import {
   post_update_username,
   post_update_password,
   post_report_user,
+  post_upload_img,
   get_notifications,
   delete_notification,
 } from "../controllers/user";
 
 const router = Router();
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./uploads/profile-img/");
+  },
+  filename: function (req, file, cb) {
+    cb(
+      null,
+      req._user_.id +
+        file.originalname.slice(file.originalname.lastIndexOf("."))
+    );
+  },
+});
+const upload = multer({ storage });
 
 router.post("/update-username", authUser, post_update_username);
 router.post("/update-password", authUser, post_update_password);
 router.post("/report-user", authUser, blockUnauthorizedUser, post_report_user);
+router.post(
+  "/upload-img",
+  authUser,
+  blockUnauthorizedUser,
+  upload.single("profileImg"),
+  post_upload_img
+);
 
 router.get("/user-info", authUser, verifyBlockedUser, get_user_info);
 router.get("/user-info-by", authUser, get_user_info_by);

@@ -9,6 +9,7 @@ import {
   validateUserName,
   validatePassword,
 } from "../lib/validators";
+import { removeProfileImg } from "../lib/remove-file";
 
 export const post_update_username = async (req, res) => {
   const { username = "" } = req.body;
@@ -86,8 +87,10 @@ export const post_update_password = async (req, res) => {
 
 export const get_remove_user = async (req, res) => {
   try {
-    const user = await User.findOneAndDelete({ username: req._user_.username });
+    const user = await User.findOneAndRemove({ username: req._user_.username });
     if (user) {
+      //removing the user profile image if exists
+      removeProfileImg(user._id);
       res.cookie("jwt", "", { maxAge: 1 });
       res.json({});
     } else res.status(500);
@@ -111,6 +114,22 @@ export const post_report_user = async (req, res) => {
     console.log(e);
     res.status(500);
     res.json({ ok: false });
+  }
+};
+
+export const post_upload_img = async (req, res) => {
+  try {
+    const user = await User.findByIdAndUpdate(
+      { _id: req._user_.id },
+      { $set: { profileImgPath: req.file.path } }
+    ).select("logedin _id username originalname isAdmin");
+    user.profileImgPath = req.file.path;
+    res.json(user);
+  } catch (e) {
+    console.log(e);
+    res.status(500);
+    res.json({ error: "image not uploaded" });
+    throw e;
   }
 };
 

@@ -36,6 +36,7 @@ const userSchema = new mongoose.Schema({
     default: false,
   },
   isAdmin: Boolean,
+  profileImgPath: String,
   reports: [reportSchema],
   notifications: [notificationSchema],
 });

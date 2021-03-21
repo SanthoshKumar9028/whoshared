@@ -3,6 +3,8 @@ import { useHistory } from "react-router-dom";
 
 import "./profile.scss";
 import GridLayout from "../components/layouts/grid-layout";
+import { UploadImg } from "../components/dialogs";
+import { ProfileImg } from "../components/profile-img";
 import { useUserAuth } from "../lib/hooks";
 import { assignUserProps } from "../lib/assignProps";
 import withUserAutentication from "../components/withUserAuthentication";
@@ -157,6 +159,34 @@ function AccoundDeleteBtn(props) {
   );
 }
 
+const ProfileImgContainer = function ({ user }) {
+  const [visible, setVisible] = useState(false);
+
+  const { profileImgPath, username, changeUser } = user;
+  return (
+    <>
+      <UploadImg
+        visible={visible}
+        setVisible={setVisible}
+        changeUser={changeUser}
+      />
+      <div className="profile__pic-container">
+        <ProfileImg
+          src={profileImgPath}
+          className="profile__pic"
+          username={username}
+        />
+        <button
+          className="profile__upload-btn"
+          onClick={() => setVisible(true)}
+        >
+          &#9998;
+        </button>
+      </div>
+    </>
+  );
+};
+
 export function Profile() {
   const { user } = useUserAuth();
   return (
@@ -164,13 +194,7 @@ export function Profile() {
       <main className="profile">
         <div className="profile__intro">
           <div className="profile__section">
-            <div className="profile__pic-container">
-              <img
-                src="/images/user_profile.png"
-                className="profile__pic-img"
-                alt="user profile"
-              />
-            </div>
+            <ProfileImgContainer user={user} />
           </div>
         </div>
         <div className="profile__section">

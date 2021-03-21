@@ -20,6 +20,10 @@ const PORT = process.env.PORT || 8080;
 //middlewars
 server.use(express.json());
 server.use(cookieParser());
+server.use(
+  "/uploads/profile-img",
+  express.static(path.resolve(__dirname, "../uploads/profile-img/"))
+);
 server.use(express.static(path.resolve(__dirname, "../build")));
 server.use((req, res, next) => {
   console.log(`${req.method}: ${req.url}`);

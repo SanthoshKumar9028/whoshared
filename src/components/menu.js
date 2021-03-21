@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 import "./menu.scss";
 import { userContext } from "../lib/contexts";
+import { ProfileImg } from "../components/profile-img";
 
 export function GuestMenu() {
   return (
@@ -27,7 +28,7 @@ export function GuestMenu() {
 
 export function UserMenu(props) {
   const [open, setOpen] = useState(false);
-  const { logout, imgUrl, username, isAdmin } = useContext(userContext);
+  const { logout, profileImgPath, username, isAdmin } = useContext(userContext);
   const { style, ...rest } = props;
 
   const close = useCallback(() => {
@@ -46,15 +47,11 @@ export function UserMenu(props) {
       </button>
       <div>
         <summary>
-          {imgUrl ? (
-            <img className="profile-img" src={imgUrl} alt="user profile" />
-          ) : (
-            <img
-              className="profile-img"
-              src="/images/user_profile.png"
-              alt="user profile"
-            />
-          )}
+          <ProfileImg
+            src={profileImgPath}
+            username={username}
+            className="profile-img"
+          />
         </summary>
         <nav className="nav" style={{ display: open ? "block" : "none" }}>
           <ul className="nav__list">

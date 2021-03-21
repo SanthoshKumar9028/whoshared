@@ -165,6 +165,56 @@
   }
 }
 
+.upload-dialog {
+  background-color: white;
+  border-radius: 15px;
+  position: absolute;
+  padding: 1em;
+  width: 90%;
+  max-width: 280px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  &__upload-btn {
+    display: block;
+    margin: 1em auto;
+    padding: 0.5em 1.5em;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 1rem;
+    background-color: $primary-color;
+    cursor: pointer;
+    outline: none;
+    &:focus {
+      box-shadow: 0 0 0 3px white, 0 0 0 6px $primary-color;
+    }
+  }
+  &__close-btn {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    border: none;
+    border-radius: 50%;
+    background-color: #333;
+    color: white;
+    width: 30px;
+    height: 30px;
+  }
+  form input[type="file"] {
+    width: 100%;
+  }
+  &__status {
+    margin: 0;
+    text-align: center;
+    &--error {
+      color: crimson;
+    }
+    &--info {
+      color: lime;
+    }
+  }
+}
+
 @media screen and (min-width: 600px) {
   .report-dialog,
   .take-action-dialog {

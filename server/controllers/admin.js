@@ -1,5 +1,6 @@
 import User from "../models/user";
 import BlockedUser from "../models/blocked-user";
+import { removeProfileImg } from "../lib/remove-file";
 
 export const get_reports = async (req, res) => {
   if (req._user_.isAdmin == false) {
@@ -102,6 +103,8 @@ export const delete_remove_user = async (req, res) => {
     const result = await User.deleteOne({ _id: req.params.userId });
     // console.log(result);
     if (result.n > 0) {
+      //removing the user profile image if exists
+      removeProfileImg(req.params.userId);
       res.json({ ok: true });
       return;
     }
